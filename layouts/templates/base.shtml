@@ -1,32 +1,48 @@
 <!DOCTYPE html>
 <html>
-  <head id="head">
-    <meta charset="UTF-8">
-    <meta name="description" content="Вивчаємо Zig Українською">
-    <meta property="og:title" content="$page.title">
-    <meta property="og:type" content="website">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title id="title">
-      <super>
-      - Zine
-    </title>
-    <link rel="stylesheet" type="text/css" href="$site.asset('style.css').link()">
-    <link rel="stylesheet" type="text/css" href="$site.asset('highlight.css').link()">
+
+<head id="head">
+  <meta charset="UTF-8">
+  <meta name="description" content="Вивчаємо Zig Українською">
+  <meta property="og:title" content="$page.title">
+  <meta property="og:type" content="website">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title id="title">
     <super>
-  </head>
-  <body>
-    <nav id="menu" class="centered">
-      <a href="/">Intro</a>
-      •
-      <a href="/language_overview_1/">language_overview_1</a>
-      •
-      <a href="/language_overview_2/">language_overview_2</a>
-      •
-      <a href="/conclusion/">Conclusion</a>
-    </nav>
-    <div id="content">
-      <super>
+      Вивчаємо Zig Українською
+  </title>
+  <link rel="stylesheet" type="text/css" href="$site.asset('style.css').link()">
+  <super>
+</head>
+
+<body>
+  <header>
+    <h1>Вивчаємо Zig Українською</h1>
+  </header>
+  <div id="main-wrapper">
+    <div id="navigation">
+      <nav aria-labelledby="table-of-contents">
+        <h2 id="table-of-contents">Зміст</h2>
+        <ul>
+          <li><a id="toc-Language-Overview-1" href="/language-overview-1">Огляд Мови, частина 1</a></li>
+          <li><a id="toc-Language-Overview-2" href="/language-overview-2">Огляд Мови, частина 2</a></li>
+          <li><a id="toc-Style-Guide" href="/style-guide">Керівництво по стилю оформлення</a></li>
+          <li><a id="toc-Pointers" href="/pointers">Вказівники</a></li>
+          <li><a id="toc-Stack-Memory" href="/stack-memory">Стекова пам'ять</a></li>
+          <li><a id="toc-Heap-Memory" href="/heap-memory">Динамічна пам'ять та розподільники пам'яті</a></li>
+          <li><a id="toc-Generics" href="/generics">Узагальнені структури даних</a></li>
+          <li><a id="toc-Coding-In-Zig" href="/coding-in-zig">Програмуємо мовою Zig</a></li>
+          <li><a id="toc-Conclusion" href="/conclusion">Висоновки</a></li>
+        </ul>
+      </nav>
     </div>
-  </body>
+    <div id="contents-wrapper">
+      <div id="content">
+        <super>
+      </div>
+    </div>
+  </div>
+</body>
+
 </html>

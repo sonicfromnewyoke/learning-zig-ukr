@@ -1,78 +1,8 @@
 <extend template="base.shtml">
-<title id="title" var="$page.title"></title>
-<head id="head">
-  <style>
-    #page h2,
-		#page h3 {
-			text-align: left;
-		}
+	<title id="title" var="$page.title"></title>
 
-		#page h2 {
-			font-size: 1.7rem;
-			border-bottom: 1px dashed #aaa;
-			margin-top: 2em;
-		}
-
-		#page h3 {
-			font-size: 1.5rem;
-		}
-
-		#page h4 {
-			font-size: 1rem;
-		}
-
-		.title,
-		.subtitle {
-			margin-bottom: 0;
-		}
-
-		.subtitle,
-		.tagline {
-			margin-top: 0;
-		}
-
-		.title {
-			font-size: 3rem;
-		}
-
-		.subtitle {
-			font-size: 2rem;
-		}
-
-		.tagline {
-			font-size: 1rem;
-			font-style: italic;
-		}
-
-		.note {
-			border-top: 1px solid white;
-			border-bottom: 1px solid white;
-			padding: 2px 5px;
-			text-align: center;
-		}
-
-		.get-started {
-			font-family: 'Bebas Neue', sans-serif;
-			font-weight: normal;
-			font-size: 2rem;
-			text-align: center;
-			margin: 1em;
-		}
-
-		.get-started a {
-			color: black;
-			font-weight: normal;
-			background-color: #ccc;
-			border: 1px solid #ccc;
-			padding: 3px 10px;
-			text-decoration: none;
-		}
-
-		.get-started a:hover {
-			background-color: white;
-		}
-  </style>
-</head>
-<div id="content">
-  <h1 class="centered title">Вивчаємо Zig</h1>
-</div>
+	<head id="head"></head>
+	<div id="content">
+		<h1 var="$page.title"></h1>
+		<div id="docs" var="$page.content"></div>
+	</div>
