@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head id="head">
+    <meta charset="UTF-8">
+    <meta name="description" content="Вивчаємо Zig Українською">
+    <meta property="og:title" content="$page.title">
+    <meta property="og:type" content="website">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title id="title">
+      <super>
+      - Zine
+    </title>
+    <link rel="stylesheet" type="text/css" href="$site.asset('style.css').link()">
+    <link rel="stylesheet" type="text/css" href="$site.asset('highlight.css').link()">
+    <super>
+  </head>
+  <body>
+    <nav id="menu" class="centered">
+      <a href="/">Intro</a>
+      •
+      <a href="/language_overview_1/">language_overview_1</a>
+      •
+      <a href="/language_overview_2/">language_overview_2</a>
+      •
+      <a href="/conclusion/">Conclusion</a>
+    </nav>
+    <div id="content">
+      <super>
+    </div>
+  </body>
+</html>

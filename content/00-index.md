@@ -1,0 +1,60 @@
+---
+{
+    .title = "Learning Zig",
+    .date = @date("2024-08-17T00:00:00"),
+    .author = "Sample Author",
+    .draft = false,
+    .layout = "learning_zig.shtml",
+    .tags = [],
+}  
+--- 
+<a href=/ style="background:#444;color:#fff;padding:10px;text-decoration:none;display: inline-block;position: absolute;top: 0;right: 0">home</a>
+<article>
+	<section style="border:0">
+		<h1 id=learning_zig tabindex=-1><a href=#learning_zig aria-hidden-true>Learning Zig</a></h1>
+		<p>Welcome to Learning Zig, an introduction to the Zig programming language. This guide aims to make you comfortable with Zig. It assumes prior programming experience, though not in any particular language.</p>
+
+		<p>Zig is under heavy development and both the Zig language and its standard library are constantly evolving. This guide targets the latest development version of Zig. However, it's possible for some of the code to be out of sync. If you've downloaded the latest version of Zig and have problems running some code, please <a href="https://github.com/karlseguin/blog/issues">report the issue</a>.</p>
+	</section>
+
+	<section>
+		<h2 tabindex=-1 id=translations><a href=#translations aria-hidden=true>Translations</a></h2>
+		<ol>
+			<li><a href="https://zigcc.github.io/learning-zig/index.html">Chinese</a> - by Jiacai Liu
+			<li><a href="https://github.com/dee0xeed/learning-zig-rus/blob/main/src/ch01.md">Russian</a> - by dee0xeed
+			<li><a href="https://faultnote.github.io/posts/learning-zig/">Korean</a> - by faultnote
+			<li><a href="https://jkitajima.github.io/learning-zig-karlseguin/">Brazilian Portuguese</a> - by João Kitajima
+			<li><a href="https://rofrol.github.io/learning-zig-karlseguin/">Polish</a> - by Roman Frołow
+		</ol>
+	</section>
+
+	<section>
+		<h2 tabindex=-1 id=toc><a href=#toc aria-hidden=true>Table of Contents</a></h2>
+		<ol>
+			<li><a href=#install>Installing Zig</a>
+			<li><a href="/learning_zig/language_overview_1/">Language Overview - Part 1</a>
+			<li><a href="/learning_zig/language_overview_2/">Language Overview - Part 2</a>
+			<li><a href="/learning_zig/style_guide/">Style guide</a>
+			<li><a href="/learning_zig/pointers/">Pointers</a>
+			<li><a href="/learning_zig/stack_memory/">Stack Memory</a>
+			<li><a href="/learning_zig/heap_memory/">Heap Memory & Allocators</a>
+			<li><a href="/learning_zig/generics/">Generics</a>
+			<li><a href="/learning_zig/coding_in_zig/">Coding In Zig</a>
+			<li><a href="/learning_zig/conclusion/">Conclusion</a>
+		</ol>
+	</section>
+
+	<section>
+		<h2 tabindex=-1 id=install><a href=#install aria-hidden=true>Installing Zig</a></h2>
+		<p>Zig's <a href="https://ziglang.org/download/">download page</a> includes pre-compiled binaries for common platforms. On this page you'll find binaries for the latest development release as well as for major releases. The latest release, which this guide tracks, can be found at the top of the page.</p>
+
+		<p>For my computer, I'll be downloading <i>zig-macos-aarch64-0.12.0-dev.2777+2176a73d6.tar.xz</i>. You might be on a different platform or a more recent release. After expanding the archive you should have a <code>zig</code> binary (in addition to other things) which you'll want to alias, or add to your path; whatever flow you're used to.</p>
+
+		<p>You should now be able to run <code>zig zen</code> and <code>zig version</code> to test your setup.</p>
+	</section>
+</article>
+
+<div class=pager>
+	<span></span>
+	<a class=next href=/learning_zig/language_overview_1/>Language Overview - Part 1</a>
+</div>
