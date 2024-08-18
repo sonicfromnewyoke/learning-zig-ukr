@@ -1,0 +1,68 @@
+:root {
+    --light-black: #333;
+    --string: #d14;
+    --function: #900;
+    --type: #458;
+    --builtin: #005C7A;
+    --number: #005C5C;
+    --comment-gray: #5c6370;
+  }
+  
+  code .comment {
+    color: var(--comment-gray);
+  }
+  
+  
+  code.zig {}
+  
+  code.zig .string {
+    color: var(--string);
+  }
+
+  code.zig .number {
+    color: var(--number);
+  }
+
+  code.zig .keyword,
+  code.zig .keyword.function,
+  code.zig .type,
+  code.zig .attribute {
+    color: var(--light-black);
+    font-weight: bold;
+  }
+
+  code.zig .function {
+    color: var(--function);
+    font-weight: bold;
+  }
+
+  code.zig .builtin {
+    color: var(--builtin);
+  }
+
+  /*
+  code.zig .variable,
+  code.zig .field {
+    color: var(--light-yellow);
+  }
+  
+  code.zig .keyword.function {
+    color: var(--blue);
+  }
+  
+  code.zig .bracket {
+    color: var(--cyan);
+  }
+  
+  code.zig .function {
+    color: var(--blue);
+  }
+  
+  
+  code.zig .operator,
+  code.zig .qualifier,
+  code.zig .attribute {
+    color: var(--light-red);
+  }
+   */
+  

@@ -86,10 +86,6 @@ dt {
 .sgr-36_1m {
  color: #005C7A;
 }
-.file {
- font-weight: bold;
- border: unset;
-}
 code {
  background: #f8f8f8;
  border: 1px dotted silver;
@@ -165,6 +161,9 @@ figcaption {
 }
 figcaption.zig-cap {
  background: #fcdba5;
+ font-weight: bold;
+ border: unset;
+ font-style: italic;
 }
 figcaption.c-cap {
  background: #a8b9cc;

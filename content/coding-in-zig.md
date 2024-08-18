@@ -1,8 +1,8 @@
 ---
 {
-    .title = "Learning Zig - Coding in Zig",
+    .title = "Програмуємо мовою Zig",
     .date = "2024-08-17T00:00:00",
-    .author = "Sample Author",
+    .author = "Sonic",
     .draft = false,
     .layout = "learning_zig.shtml",
     .tags = [],
