@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head id="head">
+  <meta charset="UTF-8">
+  <meta name="description" content="Вивчаємо Zig Українською">
+  <meta property="og:title" content="Керівництво по стилю оформлення">
+  <meta property="og:type" content="website">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title id="title">
+    Керівництво по стилю оформлення
+      Вивчаємо Zig Українською
+  </title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  <link rel="stylesheet" type="text/css" href="/highlight.css">
+  
+</head>
+
+<body>
+  <header>
+    <h1>Вивчаємо Zig Українською</h1>
+  </header>
+  <div id="main-wrapper">
+    <div id="navigation">
+      <nav aria-labelledby="table-of-contents">
+        <h2 id="table-of-contents">Зміст</h2>
+        <ul>
+          <li><a id="toc-Index" href="/">Вступ</a></li>
+          <li><a id="toc-Language-Overview-1" href="/language-overview-1">Огляд Мови, частина 1</a></li>
+          <li><a id="toc-Language-Overview-2" href="/language-overview-2">Огляд Мови, частина 2</a></li>
+          <li><a id="toc-Style-Guide" href="/style-guide">Керівництво по стилю оформлення</a></li>
+          <li><a id="toc-Pointers" href="/pointers">Вказівники</a></li>
+          <li><a id="toc-Stack-Memory" href="/stack-memory">Стекова пам'ять</a></li>
+          <li><a id="toc-Heap-Memory" href="/heap-memory">Динамічна пам'ять та розподільники пам'яті</a></li>
+          <li><a id="toc-Generics" href="/generics">Узагальнені структури даних</a></li>
+          <li><a id="toc-Coding-In-Zig" href="/coding-in-zig">Програмуємо мовою Zig</a></li>
+          <li><a id="toc-Conclusion" href="/conclusion">Висоновки</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div id="contents-wrapper">
+      <div id="content">
+        
+		<h1 >Керівництво по стилю оформлення</h1>
+		<div id="docs" ><p>У цій короткій частині ми розглянемо два правила кодування, що застосовуються компілятором, а також правила іменування стандартної бібліотеки.</p><h2>Невикористані змінні</h2><p>Zig не дозволяє змінним залишатися невикористаними. Наступне дає дві помилки під час компіляції:</p><figure>
+<figcaption class="zig-cap">learning.zig</figcaption>
+<pre><code class="zig"><span class="type qualifier">const</span> <span class="variable">std</span> = <span class="function builtin">@import</span><span class="punctuation bracket">(</span><span class="string">"std"</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+
+<span class="attribute">pub</span> <span class="keyword function">fn</span> <span class="function">main</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span> <span class="type builtin">void</span> <span class="punctuation bracket">{</span>
+  <span class="type qualifier">const</span> <span class="variable">sum</span> = <span class="variable">add</span><span class="punctuation bracket">(</span><span class="number">8999</span><span class="punctuation delimiter">,</span> <span class="number">2</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span>
+
+<span class="keyword function">fn</span> <span class="function">add</span><span class="punctuation bracket">(</span><span class="parameter">a</span><span class="punctuation delimiter">:</span> <span class="type builtin">i64</span><span class="punctuation delimiter">,</span> <span class="parameter">b</span><span class="punctuation delimiter">:</span> <span class="type builtin">i64</span><span class="punctuation bracket">)</span> <span class="type builtin">i64</span> <span class="punctuation bracket">{</span>
+  <span class="comment">// зверніть увагу, що a + a, не a + b</span>
+  <span class="keyword return">return</span> <span class="variable">a</span> <span class="operator">+</span> <span class="variable">a</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+</figure>
+<p>Перша помилка полягає в тому, що <code>sum</code> є <i>невикористаною локальною константою</i>. Друга помилка полягає в тому, що <code>b</code> є <i>невикористаним параметром функції</i>. Для цього коду це очевидні помилки. Але у вас можуть бути законні причини мати невикористані змінні та параметри функції. У таких випадках ви можете призначити змінним підкреслення (<code>_</code>):</p><figure>
+<figcaption class="zig-cap">learning.zig</figcaption>
+<pre><code class="zig"><span class="type qualifier">const</span> <span class="variable">std</span> = <span class="function builtin">@import</span><span class="punctuation bracket">(</span><span class="string">"std"</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+
+<span class="attribute">pub</span> <span class="keyword function">fn</span> <span class="function">main</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span> <span class="type builtin">void</span> <span class="punctuation bracket">{</span>
+  <span class="variable">_</span> <span class="operator">=</span> <span class="variable">add</span><span class="punctuation bracket">(</span><span class="number">8999</span><span class="punctuation delimiter">,</span> <span class="number">2</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+
+  <span class="comment">// або</span>
+
+  <span class="type qualifier">const</span> <span class="variable">sum</span> = <span class="variable">add</span><span class="punctuation bracket">(</span><span class="number">8999</span><span class="punctuation delimiter">,</span> <span class="number">2</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+  <span class="variable">_</span> <span class="operator">=</span> <span class="variable">sum</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span>
+
+<span class="keyword function">fn</span> <span class="function">add</span><span class="punctuation bracket">(</span><span class="parameter">a</span><span class="punctuation delimiter">:</span> <span class="type builtin">i64</span><span class="punctuation delimiter">,</span> <span class="parameter">b</span><span class="punctuation delimiter">:</span> <span class="type builtin">i64</span><span class="punctuation bracket">)</span> <span class="type builtin">i64</span> <span class="punctuation bracket">{</span>
+  <span class="variable">_</span> <span class="operator">=</span> <span class="variable">b</span><span class="punctuation delimiter">;</span>
+  <span class="keyword return">return</span> <span class="variable">a</span> <span class="operator">+</span> <span class="variable">a</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+</figure>
+<p>Як альтернативу виконанню <code>_ = b;</code>, ми могли б назвати параметр функції <code>_</code>, хоча, на мою думку, це залишає читача здогадуватися, що таке невикористаний параметр:</p><pre><code class="zig"><span class="keyword function">fn</span> <span class="function">add</span><span class="punctuation bracket">(</span><span class="parameter">a</span><span class="punctuation delimiter">:</span> <span class="type builtin">i64</span><span class="punctuation delimiter">,</span> <span class="parameter">_</span><span class="punctuation delimiter">:</span> <span class="type builtin">i64</span><span class="punctuation bracket">)</span> <span class="type builtin">i64</span> <span class="error">{</span>
+</code></pre>
+<p>Зауважте, що <code>std</code> також не використовується, але не створює помилки. Очікуйте, що колись у майбутньому Zig розглядатиме це як помилку під час компіляції.</p><h2>Затінення (Shadowing)</h2><p>Zig не дозволяє одному ідентифікатору "приховувати" інший за допомогою того самого імені. Цей код для читання з сокета недійсний:</p><pre><code class="zig"><span class="keyword function">fn</span> <span class="function">read</span><span class="punctuation bracket">(</span><span class="parameter">stream</span><span class="punctuation delimiter">:</span> <span class="variable">std</span><span class="punctuation delimiter">.</span><span class="field">net</span><span class="punctuation delimiter">.</span><span class="field">Stream</span><span class="punctuation bracket">)</span> <span class="exception">!</span><span class="punctuation bracket">[</span><span class="punctuation bracket">]</span><span class="type qualifier">const</span> <span class="type builtin">u8</span> <span class="punctuation bracket">{</span>
+  <span class="type qualifier">var</span> <span class="variable">buf</span><span class="punctuation delimiter">:</span> <span class="punctuation bracket">[</span><span class="number">512</span><span class="punctuation bracket">]</span><span class="type builtin">u8</span> = <span class="constant builtin">undefined</span><span class="punctuation delimiter">;</span>
+  <span class="type qualifier">const</span> <span class="variable">read</span> = <span class="operator">try</span> <span class="variable">stream</span><span class="punctuation delimiter">.</span><span class="function">read</span><span class="punctuation bracket">(</span><span class="operator">&</span><span class="variable">buf</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+
+  <span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="variable">read</span> <span class="operator">==</span> <span class="number">0</span><span class="punctuation bracket">)</span> <span class="punctuation bracket">{</span>
+    <span class="keyword return">return</span> <span class="keyword">error</span><span class="punctuation delimiter">.</span><span class="variable builtin">Closed</span><span class="punctuation delimiter">;</span>
+  <span class="punctuation bracket">}</span>
+  
+  <span class="keyword return">return</span> <span class="variable">buf</span><span class="punctuation bracket">[</span><span class="number">0</span><span class="punctuation special">..</span><span class="variable">read</span><span class="punctuation bracket">]</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+<p>Наша змінна <code>read</code> затінює назву нашої функції. Я не прихильник цього правила, оскільки воно зазвичай змушує розробників використовувати короткі безглузді імена. Наприклад, щоб компілювати цей код, я б змінив <code>read</code> на <code>n</code>. Це той випадок, коли, на мою думку, розробники мають набагато кращу позицію, щоб вибрати найбільш читабельний варіант.</p><h2>Угода про найменування</h2><p>Крім правил, встановлених компілятором, ви, звичайно, можете вільні дотримуватися будь-якої угоди про іменування, яку ви віддаєте перевагу. Але це допомагає зрозуміти власну угоду про іменування Zig, оскільки більшість коду, з яким ви будете взаємодіяти, від стандартної бібліотеки до сторонніх бібліотек, використовує його.</p><p>Вихідний код Zig має відступ 4 пробілами. Я особисто використовую вкладку, яка об’єктивно краща з точки зору доступності.</p><p>Назви функцій — верблюжий регістр, а змінні — нижній регістр_з_підкресленням (він же регістр змії). Типи: PascalCase. Існує цікавий перетин цих трьох правил. Змінні, які посилаються на тип, або функції, які повертають тип, дотримуються правила типу та є PascalCase. Ми вже це бачили, хоча ви могли пропустити.</p><pre><code class="zig"><span class="variable">std</span><span class="punctuation delimiter">.</span><span class="field">debug</span><span class="punctuation delimiter">.</span><span class="function">print</span><span class="punctuation bracket">(</span><span class="string">"{any}\n"</span><span class="punctuation delimiter">,</span> <span class="punctuation delimiter">.</span><span class="punctuation bracket">{</span><span class="function builtin">@TypeOf</span><span class="punctuation bracket">(</span><span class="punctuation delimiter">.</span><span class="punctuation bracket">{</span><span class="punctuation delimiter">.</span><span class="field">year</span> = <span class="number">2023</span><span class="punctuation delimiter">,</span> <span class="punctuation delimiter">.</span><span class="field">month</span> = <span class="number">8</span><span class="punctuation bracket">}</span><span class="punctuation bracket">)</span><span class="punctuation bracket">}</span><span class="punctuation bracket">)</span><span class="error">;</span>
+</code></pre>
+<p>Ми бачили інші вбудовані функції: <code>@import</code>, <code>@rem</code> і <code>@intCast</code>. Оскільки це функції, вони верблюжі. <code>@TypeOf</code> також є вбудованою функцією, але це PascalCase, чому? Оскільки він повертає тип, тож використовується угода про найменування типів. Якби ми призначили результат <code>@TypeOf</code> змінній, використовуючи угоду про іменування Zig, ця змінна також має бути PascalCase:</p><pre><code class="zig"><span class="type qualifier">const</span> <span class="variable">T</span> = <span class="function builtin">@TypeOf</span><span class="punctuation bracket">(</span><span class="number">3</span><span class="punctuation bracket">)</span>
+<span class="error">std</span><span class="punctuation delimiter">.</span><span class="field">debug</span><span class="punctuation delimiter">.</span><span class="function">print</span><span class="punctuation bracket">(</span><span class="string">"{any}\n"</span><span class="punctuation delimiter">,</span> <span class="punctuation delimiter">.</span><span class="punctuation bracket">{</span><span class="variable">T</span><span class="punctuation bracket">}</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+</code></pre>
+<p>Виконуваний файл <code>zig</code> має команду <code>fmt</code>, яка, якщо задано файл або каталог, відформатує файл на основі власного посібника зі стилю Zig. Однак він не охоплює все, наприклад, він регулює відступи та положення дужок, але не змінює регістр ідентифікатора.</p></div>
+	
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
