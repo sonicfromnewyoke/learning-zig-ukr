@@ -68,7 +68,7 @@ pub const User = struct {
 
 
 <figure>
-<figcaption class="zig-cap">main.zig</figcaption>
+<figcaption class="zig-cap">learning.zig</figcaption>
 
 ```zig
 const User = @import("models/user.zig").User;
@@ -97,7 +97,7 @@ pub const User = struct {
 У цьому випадку ми могли б імпортувати обидва:
 
 <figure>
-<figcaption class="zig-cap">main.zig</figcaption>
+<figcaption class="zig-cap">learning.zig</figcaption>
 
 ```zig
 const user = @import("models/user.zig");
@@ -133,7 +133,7 @@ pub fn main() void
 Ігноруючи особливу роль `main` як точки входу в нашу програму, це справді проста функція: вона не приймає параметрів і нічого не повертає, так само як `void`. Наступне _трохи_ цікавіше:
 
 <figure>
-<figcaption class="zig-cap">main.zig</figcaption>
+<figcaption class="zig-cap">learning.zig</figcaption>
 
 ```zig
 const std = @import("std");
@@ -342,7 +342,7 @@ ___
 Вивчення Zig навчило мене, що типи дуже описові. Це не просто ціле чи логічне значення чи навіть масив 32-розрядних цілих чисел зі знаком. Типи також містять іншу важливу інформацію. Ми говорили про те, що довжина є частиною типу масиву, і багато прикладів показали, що незмінність (const-ness) також є його частиною. Наприклад, у нашому останньому прикладі тип `b` — `[]const i32`. Ви можете переконатися в цьому за допомогою наступного коду:
 
 <figure>
-<figcaption class="zig-cap">main.zig</figcaption>
+<figcaption class="zig-cap">learning.zig</figcaption>
 
 ```zig
 const std = @import("std");
@@ -369,7 +369,7 @@ var b = a[1..end];
 але ви отримаєте ту саму помилку, чому? Як підказку, який тип `b`, або загальніше, що таке `b`? Зріз — це довжина та покажчик на [частину] масиву. Тип зрізу завжди походить від того, що він нарізає. Незалежно від того, чи `b` оголошено `const` чи ні, він є зрізом `[5]const i32`, тому b має бути типу ` []const i32`. Якщо ми хочемо мати можливість писати в `b`, нам потрібно змінити `a` з `const` на `var`
 
 <figure>
-<figcaption class="zig-cap">main.zig</figcaption>
+<figcaption class="zig-cap">learning.zig</figcaption>
 
 ```zig
 const std = @import("std");
@@ -387,7 +387,7 @@ pub fn main() void {
 Це працює, оскільки наш зріз більше не `[]const i32`, а скоріше `[]i32`. Можливо, ви розумно дивуєтесь, чому це працює, коли `b` все ще є `const`. Але постійність `b` стосується самого `b`, а не даних, на які вказує `b`. Що ж, я не впевнений, що це чудове пояснення, але для мене цей код підкреслює різницю:
 
 <figure>
-<figcaption class="zig-cap">main.zig</figcaption>
+<figcaption class="zig-cap">learning.zig</figcaption>
 
 ```zig
 const std = @import("std");
@@ -420,7 +420,7 @@ pub fn main() void {
 
 
 <figure>
-<figcaption class="zig-cap">main.zig</figcaption>
+<figcaption class="zig-cap">learning.zig</figcaption>
 
 ```zig
 const std = @import("std");

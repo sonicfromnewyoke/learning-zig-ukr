@@ -16,7 +16,7 @@
 Zig не дозволяє змінним залишатися невикористаними. Наступне дає дві помилки під час компіляції:
 
 <figure>
-<figcaption class="zig-cap">main.zig</figcaption>
+<figcaption class="zig-cap">learning.zig</figcaption>
 
 ```zig
 const std = @import("std");
@@ -36,7 +36,7 @@ fn add(a: i64, b: i64) i64 {
 Перша помилка полягає в тому, що `sum` є _невикористаною локальною константою_. Друга помилка полягає в тому, що `b` є _невикористаним параметром функції_. Для цього коду це очевидні помилки. Але у вас можуть бути законні причини мати невикористані змінні та параметри функції. У таких випадках ви можете призначити змінним підкреслення (`_`):
 
 <figure>
-<figcaption class="zig-cap">main.zig</figcaption>
+<figcaption class="zig-cap">learning.zig</figcaption>
 
 ```zig
 const std = @import("std");

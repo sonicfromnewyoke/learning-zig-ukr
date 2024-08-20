@@ -262,7 +262,7 @@ const Stage = enum {
 
 
 <figure>
-<figcaption class="zig-cap">main.zig</figcaption>
+<figcaption class="zig-cap">learning.zig</figcaption>
 
 ```zig
 const std = @import("std");
@@ -289,7 +289,7 @@ const n = Number{.nan = {}};
 Проблема з профспілками полягає в тому, щоб знати, яке поле встановлено. Тут вступають у гру тегові союзи. Об’єднання з тегами об’єднує перелік із об’єднанням, яке можна використовувати в операторі `switch`. Розглянемо цей приклад:
 
 <figure>
-<figcaption class="zig-cap">main.zig</figcaption>
+<figcaption class="zig-cap">learning.zig</figcaption>
 
 ```zig
 pub fn main() void {
@@ -419,7 +419,7 @@ const OpenError = error {
 Функція, включаючи `main`, тепер може повертати цю помилку:
 
 <figure>
-<figcaption class="zig-cap">main.zig</figcaption>
+<figcaption class="zig-cap">learning.zig</figcaption>
 
 ```zig
 pub fn main() void {
@@ -527,7 +527,7 @@ pub fn loadLast() !?Save {
 Існують різні способи використання таких функцій, але найкомпактнішим є використання `try`, щоб розгорнути нашу помилку, а потім `orelse`, щоб розгорнути опціональний. Ось робочий скелет:
 
 <figure>
-<figcaption class="zig-cap">main.zig</figcaption>
+<figcaption class="zig-cap">learning.zig</figcaption>
 
 ```zig
 const std = @import("std");

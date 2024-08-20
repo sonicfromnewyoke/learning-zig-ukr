@@ -117,35 +117,6 @@ kbd {
  overflow-x: auto;
 }
 
-.tok-kw {
-   color: #333;
-   font-weight: bold;
-}
-.tok-str {
-   color: #d14;
-}
-.tok-builtin {
-   color: #005C7A;
-}
-.tok-comment {
-   color: #545454;
-   font-style: italic;
-}
-.tok-fn {
-   color: #900;
-   font-weight: bold;
-}
-.tok-null {
-   color: #005C5C;
-}
-.tok-number {
-   color: #005C5C;
-}
-.tok-type {
-   color: #458;
-   font-weight: bold;
-}
-
 figure {
  margin: auto 0;
 }
@@ -243,30 +214,6 @@ th pre code {
  }
  pre > samp {
    border: unset;
- }
- .tok-kw {
-     color: #eee;
- }
- .tok-str {
-     color: #2e5;
- }
- .tok-builtin {
-     color: #ff894c;
- }
- .tok-comment {
-     color: #aa7;
- }
- .tok-fn {
-     color: #B1A0F8;
- }
- .tok-null {
-     color: #ff8080;
- }
- .tok-number {
-     color: #ff8080;
- }
- .tok-type {
-     color: #68f;
  }
  h1 a, h2 a, h3 a, h4 a, h5 a {
      color: #aaa;
