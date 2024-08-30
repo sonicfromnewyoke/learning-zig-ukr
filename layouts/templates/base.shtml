@@ -26,16 +26,16 @@
       <nav aria-labelledby="table-of-contents">
         <h2 id="table-of-contents">Зміст</h2>
         <ul>
-          <li><a id="toc-Index" href="/learning-zig-ukr/">Вступ</a></li>
-          <li><a id="toc-Language-Overview-1" href="/learning-zig-ukr/language-overview-1">Огляд Мови, частина 1</a></li>
-          <li><a id="toc-Language-Overview-2" href="/learning-zig-ukr/language-overview-2">Огляд Мови, частина 2</a></li>
-          <li><a id="toc-Style-Guide" href="/learning-zig-ukr/style-guide">Керівництво по стилю оформлення</a></li>
-          <li><a id="toc-Pointers" href="/learning-zig-ukr/pointers">Вказівники</a></li>
-          <li><a id="toc-Stack-Memory" href="/learning-zig-ukr/stack-memory">Стекова пам'ять</a></li>
-          <li><a id="toc-Heap-Memory" href="/learning-zig-ukr/heap-memory">Динамічна пам'ять та розподільники пам'яті</a></li>
-          <li><a id="toc-Generics" href="/learning-zig-ukr/generics">Узагальнені структури даних</a></li>
-          <li><a id="toc-Coding-In-Zig" href="/learning-zig-ukr/coding-in-zig">Програмуємо мовою Zig</a></li>
-          <li><a id="toc-Conclusion" href="/learning-zig-ukr/conclusion">Висоновки</a></li>
+          <li><a id="toc-Index" href="$site.page('index').link()">Вступ</a></li>
+          <li><a id="toc-Language-Overview-1" href="$site.page('language-overview-1').link()">Огляд Мови, частина 1</a></li>
+          <li><a id="toc-Language-Overview-2" href="$site.page('language-overview-2').link()">Огляд Мови, частина 2</a></li>
+          <li><a id="toc-Style-Guide" href="$site.page('style-guide').link()">Керівництво по стилю оформлення</a></li>
+          <li><a id="toc-Pointers" href="$site.page('pointers').link()">Вказівники</a></li>
+          <li><a id="toc-Stack-Memory" href="$site.page('stack-memory').link()">Стекова пам'ять</a></li>
+          <li><a id="toc-Heap-Memory" href="$site.page('heap-memory').link()">Динамічна пам'ять та розподільники пам'яті</a></li>
+          <li><a id="toc-Generics" href="$site.page('generics').link()">Узагальнені структури даних</a></li>
+          <li><a id="toc-Coding-In-Zig" href="$site.page('coding-in-zig').link()">Програмуємо мовою Zig</a></li>
+          <li><a id="toc-Conclusion" href="$site.page('conclusion').link()">Висоновки</a></li>
         </ul>
       </nav>
     </div>

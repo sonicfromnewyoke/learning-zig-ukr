@@ -17,41 +17,37 @@
 
 Чи можете ви зрозуміти, що це за наступні результати?
 
-<figure>
-<figcaption class="zig-cap">learning.zig</figcaption>
-
-```zig
-const std = @import("std");
-
-pub fn main() !void {
-  var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-  const allocator = gpa.allocator();
-
-  var lookup = std.StringHashMap(User).init(allocator);
-  defer lookup.deinit();
-
-  const goku = User{.power = 9001};
-
-  try lookup.put("Goku", goku);
-
-  // повертаємо опціональне значення, .? запанікує якщо "Goku"
-  // немає в хещ-мапі
-  const entry = lookup.getPtr("Goku").?;
-
-  std.debug.print("Goku's power is: {d}\n", .{entry.power});
-
-  // повертає true/false в залежності від того чи був елемент видалений
-  _ = lookup.remove("Goku");
-
-  std.debug.print("Сила Goku становить: {d}\n", .{entry.power});
-}
-
-const User = struct {
-  power: i32,
-};
-```
-
-</figure>
+>[]($block)
+>```zig
+>const std = @import("std");
+>
+>pub fn main() !void {
+>  var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+>  const allocator = gpa.allocator();
+>
+>  var lookup = std.StringHashMap(User).init(allocator);
+>  defer lookup.deinit();
+>
+>  const goku = User{.power = 9001};
+>
+>  try lookup.put("Goku", goku);
+>
+>  // повертаємо опціональне значення, .? запанікує якщо "Goku"
+>  // немає в хещ-мапі
+>  const entry = lookup.getPtr("Goku").?;
+>
+>  std.debug.print("Goku's power is: {d}\n", .{entry.power});
+>
+>  // повертає true/false в залежності від того чи був елемент видалений
+>  _ = lookup.remove("Goku");
+>
+>  std.debug.print("Сила Goku становить: {d}\n", .{entry.power});
+>}
+>
+>const User = struct {
+>  power: i32,
+>};
+>```
 
 Коли я це запустив, я отримав
 
@@ -82,9 +78,7 @@ const User = struct {
 
 Інший варіант – змінити тип пошуку з `StringHashMap(User)` на `StringHashMap(*const User)`. Цей код працює:
 
-<figure>
-<figcaption class="zig-cap">learning.zig</figcaption>
-
+*learning.zig*
 ```zig
 const std = @import("std");
 
@@ -114,8 +108,6 @@ const User = struct {
 };
 ```
 
-</figure>
-
 У наведеному вище коді є ряд тонкощів. По-перше, тепер у нас є єдиний `User`, `goku`. Значення в `lookup` і `entry` є посиланнями на `goku`. Наш виклик `remove` все одно видаляє значення з нашого `lookup`, але це значення є просто адресою `user`, це не є `user` сам по собі. Якби ми зупинилися на `getPtr`, ми отримали б недійсний `**User`, недійсний через `remove`. В обох рішеннях ми мали використовувати `get` замість `getPtr`, але в цьому випадку ми просто копіюємо адресу, а не повний `User`. Для великих об’єктів це може бути значною різницею.
 
 Оскільки все в одній функції та невеликому значенні, як-от `User`, це все ще виглядає як штучно створена проблема. Нам потрібен приклад, який законно робить право власності на дані негайною проблемою.
@@ -126,9 +118,7 @@ const User = struct {
 
 Цей код заповнює наш `lookup` іменами, які ви вводите в терміналі. Порожнє ім'я зупиняє цикл підказки. Нарешті, він визначає, чи було `Leto` одним із наданих імен.
 
-<figure>
-<figcaption class="zig-cap">learning.zig</figcaption>
-
+*learning.zig*
 ```zig
 const std = @import("std");
 const builtin = @import("builtin");
@@ -174,8 +164,6 @@ const User = struct {
   power: i32,
 };
 ```
-
-</figure>
 
 ---
 
@@ -251,9 +239,7 @@ defer {
 
 Це досить стандартна річ, але це настільки поширена і використовувана структура даних, що варто побачити її в дії:
 
-<figure>
-<figcaption class="zig-cap">learning.zig</figcaption>
-
+*learning.zig*
 ```zig
 const std = @import("std");
 const builtin = @import("builtin");
@@ -314,17 +300,13 @@ const User = struct {
 };
 ```
 
-</figure>
-
 Вище наведено відтворення нашого коду хеш-карти, але з використанням `ArrayList(User)`. Застосовуються ті самі правила керування терміном служби та пам’яттю. Зауважте, що ми все ще створюємо `дуп` імені, і ми все ще звільняємо кожне ім’я перед тим, як `деінітувати` `ArrayList`.
 
 Це гарний момент, щоб зазначити, що Zig не має властивостей або приватних полів. Ви можете побачити це, коли ми отримуємо доступ до `arr.items`, щоб перебирати значення. Причиною відсутності властивостей є усунення джерела сюрпризів. У Zig, якщо це виглядає як доступ до поля, це **є** доступ до поля. Особисто я вважаю, що відсутність приватних полів є помилкою, але це, звичайно, те, що ми можемо обійти. Я додав до полів префікс підкресленням, щоб позначити «тільки для внутрішнього використання».
 
 Оскільки «тип» рядка є `[]u8` або `[]const u8`, `ArrayList(u8)` є відповідним типом для конструктора рядків, наприклад `StringBuilder` .NET або `strings.Builder` Go's . Фактично, ви часто будете використовувати це, коли функція приймає `Writer`, а вам потрібен рядок. Раніше ми бачили приклад використання `std.json.stringify` для виведення JSON на stdout. Ось як можна використати `ArrayList(u8)` для виведення його в змінну:
 
-<figure>
-<figcaption class="zig-cap">learning.zig</figcaption>
-
+*learning.zig*
 ```zig
 const std = @import("std");
 
@@ -344,8 +326,6 @@ pub fn main() !void {
   std.debug.print("{s}\n", .{out.items});
 }
 ```
-
-</figure>
 
 ## `Anytype`
 
@@ -454,9 +434,7 @@ pub const User = struct {
 Тим не менш, ми можемо отримати принаймні короткий огляд. Щоб запустити наш Zig-код, ми використали `zig run learning.zig`. Одного разу ми також використали `zig test learning.zig` для запуску тесту. Команди `run` і `test` чудово підходять для гри, але це команда `build`, яка вам знадобиться для чогось більш складного. Команда `build` покладається на файл `build.zig` зі спеціальною точкою входу `build`. Ось скелет:
 
 
-<figure>
-<figcaption class="zig-cap">build.zig</figcaption>
-
+*learning.zig*
 ```zig
 const std = @import("std");
 
@@ -464,13 +442,10 @@ pub fn build(b: *std.Build) !void {
   _ = b;
 }
 ```
-</figure>
 
 Кожна збірка має типовий крок «встановлення», який тепер можна виконати за допомогою `zig build install`, але оскільки наш файл здебільшого порожній, ви не отримаєте жодних значущих артефактів. Нам потрібно повідомити нашій збірці про точку входу нашої програми, яка знаходиться в `learning.zig`:
 
-<figure>
-<figcaption class="zig-cap">learning.zig</figcaption>
-
+*learning.zig*
 ```zig
 const std = @import("std");
 
@@ -488,7 +463,6 @@ pub fn build(b: *std.Build) !void {
   b.installArtifact(exe);
 }
 ```
-</figure>
 
 Тепер, якщо ви запустите `zig build install`, ви отримаєте двійковий файл у `./zig-out/bin/learning`. Використання стандартних цілей і оптимізацій дозволяє нам перевизначати значення за замовчуванням як аргументи командного рядка. Наприклад, щоб створити оптимізовану за розміром версію нашої програми для Windows, ми б зробили:
 
@@ -574,9 +548,7 @@ test {
 
 Ми розділяємо це між `calc.zig` і `add.zig`, щоб довести, що `zig build` автоматично створить і запакує всі файли нашого проекту. Нарешті, ми можемо додати `build.zig`:
 
-<figure>
-<figcaption class="zig-cap">learning.zig</figcaption>
-
+*learning.zig*
 ```zig
 const std = @import("std");
 
@@ -596,7 +568,6 @@ pub fn build(b: *std.Build) !void {
   test_step.dependOn(&test_cmd.step);
 }
 ```
-</figure>
 
 Це все повторення того, що ми бачили в попередньому розділі. З цим ви можете запустити `zig build test --summary all`.
 
