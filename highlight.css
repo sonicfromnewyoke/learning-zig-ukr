@@ -1,0 +1,70 @@
+  code .comment {
+    color:#5c6370;
+  }
+  
+  
+  code.zig {}
+  
+  code.zig .string {
+    color: #d14;
+  }
+
+  code.zig .number {
+    color:#005C5C;
+  }
+
+  code.zig .keyword,
+  code.zig .keyword.function,
+  code.zig .type,
+  code.zig .attribute {
+    color: #333;
+    font-weight: bold;
+  }
+
+  code.zig .function + .function {
+    color:  #900;
+    font-weight: bold;
+  }
+
+  code.zig .type.builtin {
+    color: #458;
+  }
+
+  code.zig .builtin {
+    color: #005C7A;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    code .comment {
+      color:#aa7;
+    }
+
+    code.zig .string {
+      color: #2e5;
+    }
+
+    code.zig .number {
+      color:#ff8080;
+    }
+
+    code.zig .keyword,
+    code.zig .type,
+    code.zig .keyword.function,
+    code.zig .attribute {
+      color: #eee;
+      font-weight: bold;
+    }
+
+    code.zig .function + .function {
+      color:  #B1A0F8;
+      font-weight: bold;
+    }
+
+    code.zig .type.builtin{
+      color: #68f;
+    }
+
+    code.zig .builtin {
+      color: #ff894c;
+    }
+  }

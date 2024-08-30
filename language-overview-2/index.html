@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+
+<head id="head">
+  <meta charset="UTF-8">
+  <meta name="description" content="Вивчаємо Zig Українською">
+  <meta property="og:title" content="Огляд Мови, частина 2">
+  <meta property="og:type" content="website">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title id="title">
+    Огляд Мови, частина 2
+      Вивчаємо Zig Українською
+  </title>
+  <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/style.css">
+  <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/highlight.css">
+  
+</head>
+
+<body>
+  <header>
+    <h1>Вивчаємо Zig Українською</h1>
+  </header>
+  <div id="main-wrapper">
+    <div id="navigation">
+      <nav aria-labelledby="table-of-contents">
+        <h2 id="table-of-contents">Зміст</h2>
+        <ul>
+          <li><a id="toc-Index" href="/learning-zig-ukr/">Вступ</a></li>
+          <li><a id="toc-Language-Overview-1" href="/learning-zig-ukr/language-overview-1/">Огляд Мови, частина 1</a></li>
+          <li><a id="toc-Language-Overview-2" href="/learning-zig-ukr/language-overview-2/">Огляд Мови, частина 2</a></li>
+          <li><a id="toc-Style-Guide" href="/learning-zig-ukr/style-guide/">Керівництво по стилю оформлення</a></li>
+          <li><a id="toc-Pointers" href="/learning-zig-ukr/pointers/">Вказівники</a></li>
+          <li><a id="toc-Stack-Memory" href="/learning-zig-ukr/stack-memory/">Стекова пам'ять</a></li>
+          <li><a id="toc-Heap-Memory" href="/learning-zig-ukr/heap-memory/">Динамічна пам'ять та розподільники пам'яті</a></li>
+          <li><a id="toc-Generics" href="/learning-zig-ukr/generics/">Узагальнені структури даних</a></li>
+          <li><a id="toc-Coding-In-Zig" href="/learning-zig-ukr/coding-in-zig/">Програмуємо мовою Zig</a></li>
+          <li><a id="toc-Conclusion" href="/learning-zig-ukr/conclusion/">Висоновки</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div id="contents-wrapper">
+      <div id="contents">
+        
+		<h1 var="Огляд Мови, частина 2"></h1>
+		<div id="docs"><p>Ця частина продовжується там, де зупинилася попередня: огляд мови. Ми розглянемо потік керування виконанням програми Zig і типи даних, про які ми ще не згадували. В першій частині ми охопили більше синтаксис мови, що дозволить нам зрозуміти краще мову та стандартну бібліотеку.</p><h2>Керування Потоком Виконання</h2><p>Оператори керування потоком у Zig, ймовірно, покажуться вам знайомими, але з додатковими синергізмами з деякими аспектами мови, які нам ще потрібно вивчити. Ми почнемо з короткого огляду та будемо повертатися по мірі того, як нам будуть зустрічатись особливості поведінки інструкціій керування.</p><p>Ви помітите, що замість логічних операторів <code>&&</code> і <code>||</code> ми використовуємо <code>and</code> та <code>or</code>. Як і в більшості мов, «і» та «або» керують процесом виконання: вони замикаються. Права сторона "і" не оцінюється, якщо ліва сторона має значення "false", а права частина "або" не оцінюється, якщо ліва сторона має значення "true". У Zig керування потоком виконується за допомогою ключових слів, тому використовуються «and» та «or».</p><p>Крім того, оператор порівняння <code>==</code> не працює для зрізіс, таких як <code>[]const u8</code>, тобто рядками. У більшості випадків ви будете використовувати <code>std.mem.eql(u8, str1, str2)</code>, який порівнює довжину, а потім байти двох зрізів.</p><p>У Zig <code>if</code>, <code>else if</code> та <code>else</code> нічим особливо не відрізняються:</p><pre><code class="zig"><span class="comment">// std.mem.eql виконує побайтове порівняння</span>
+<span class="comment">// для рядка він буде чутливим до регістру</span>
+<span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="variable">std</span><span class="punctuation delimiter">.</span><span class="field">mem</span><span class="punctuation delimiter">.</span><span class="function">eql</span><span class="punctuation bracket">(</span><span class="type builtin">u8</span><span class="punctuation delimiter">,</span> <span class="variable">method</span><span class="punctuation delimiter">,</span> <span class="string">&quot;GET&quot;</span><span class="punctuation bracket">)</span> <span class="keyword operator">or</span> <span class="variable">std</span><span class="punctuation delimiter">.</span><span class="field">mem</span><span class="punctuation delimiter">.</span><span class="function">eql</span><span class="punctuation bracket">(</span><span class="type builtin">u8</span><span class="punctuation delimiter">,</span> <span class="variable">method</span><span class="punctuation delimiter">,</span> <span class="string">&quot;HEAD&quot;</span><span class="punctuation bracket">)</span><span class="punctuation bracket">)</span><span class="keyword"></span> <span class="punctuation bracket">{</span>
+  <span class="comment">// обробити запит GET</span>
+<span class="punctuation bracket">}</span> <span class="conditional">else</span> <span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="variable">std</span><span class="punctuation delimiter">.</span><span class="field">mem</span><span class="punctuation delimiter">.</span><span class="function">eql</span><span class="punctuation bracket">(</span><span class="type builtin">u8</span><span class="punctuation delimiter">,</span> <span class="variable">method</span><span class="punctuation delimiter">,</span> <span class="string">&quot;POST&quot;</span><span class="punctuation bracket">)</span><span class="punctuation bracket">)</span><span class="keyword"></span> <span class="punctuation bracket">{</span>
+  <span class="comment">// обробити запит POST</span>
+<span class="punctuation bracket">}</span> <span class="conditional">else</span><span class="keyword"></span> <span class="punctuation bracket">{</span>
+  <span class="comment">// ...</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+<hr><blockquote><p>Першим аргументом <code>std.mem.eql</code> є тип, у цьому випадку <code>u8</code>. Це перша узагальнена функція, яку ми побачили. Більше детально ми розглянемо це пізніше.</p></blockquote><hr><p>Наведений вище приклад порівнює рядки ASCII і, ймовірно, тут не потрібно враховувати регістр. То ж кращим варіантом буде<code>std.ascii.eqlIgnoreCase(str1, str2)</code>.</p><p>Тернарного оператора немає, але ви можете використовувати <code>if/else</code> наступним чином:</p><pre><code class="zig"><span class="type qualifier">const</span> <span class="variable">super</span> = <span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="variable">power</span> <span class="operator">&gt;</span> <span class="number">9000</span><span class="punctuation bracket">)</span> <span class="boolean">true</span> <span class="conditional">else</span> <span class="boolean">false</span><span class="punctuation delimiter">;</span>
+</code></pre>
+<p><code>switch</code> схожий на <code>if/else if/else</code>, але має перевагу в тому, що повинні бути вказані всі можливі варіанти. Цей код не компілюється:</p><pre><code class="zig"><span class="keyword function">fn</span> <span class="function">anniversaryName</span><span class="punctuation bracket">(</span><span class="parameter">years_married</span><span class="punctuation delimiter">:</span> <span class="type builtin">u16</span><span class="punctuation bracket">)</span> <span class="punctuation bracket">[</span><span class="punctuation bracket">]</span><span class="type qualifier">const</span> <span class="type builtin">u8</span> <span class="punctuation bracket">{</span>
+  <span class="conditional">switch</span> <span class="punctuation bracket">(</span><span class="variable">years_married</span><span class="punctuation bracket">)</span> <span class="punctuation bracket">{</span>
+    <span class="number">1</span> =&gt; <span class="keyword return">return</span> <span class="string">&quot;папір&quot;</span><span class="punctuation delimiter">,</span>
+    <span class="number">2</span> =&gt; <span class="keyword return">return</span> <span class="string">&quot;бавовна&quot;</span><span class="punctuation delimiter">,</span>
+    <span class="number">3</span> =&gt; <span class="keyword return">return</span> <span class="string">&quot;шкіра&quot;</span><span class="punctuation delimiter">,</span>
+    <span class="number">4</span> =&gt; <span class="keyword return">return</span> <span class="string">&quot;квітка&quot;</span><span class="punctuation delimiter">,</span>
+    <span class="number">5</span> =&gt; <span class="keyword return">return</span> <span class="string">&quot;дерево&quot;</span><span class="punctuation delimiter">,</span>
+    <span class="number">6</span> =&gt; <span class="keyword return">return</span> <span class="string">&quot;цукор&quot;</span><span class="punctuation delimiter">,</span>
+  <span class="punctuation bracket">}</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+<p>Компілятор нам каже: <em>switch must handle all possibilities</em>. Оскільки наш <code>years_married</code> є 16-бітним цілим числом, чи означає це, що нам потрібно обробляти всі 64 тисячі випадків? Так, але, на щастя, є <code>else</code>:</p><pre><code class="zig"><span class="comment">// ...</span>
+<span class="number">6</span> =<span class="error">&gt; return</span> <span class="string">&quot;цукор&quot;</span><span class="punctuation delimiter">,</span>
+<span class="variable">else</span> =<span class="error">&gt; return</span> <span class="string">&quot;ніяких більше подарунків&quot;</span><span class="punctuation delimiter">,</span>
+</code></pre>
+<p>Ми можемо комбінувати кілька випадків або використовувати діапазони, а для складних випадків використовувати блоки:</p><pre><code class="zig"><span class="keyword function">fn</span> <span class="function">arrivalTimeDesc</span><span class="punctuation bracket">(</span><span class="parameter">minutes</span><span class="punctuation delimiter">:</span> <span class="type builtin">u16</span><span class="punctuation delimiter">,</span> <span class="parameter">is_late</span><span class="punctuation delimiter">:</span> <span class="type builtin">bool</span><span class="punctuation bracket">)</span> <span class="punctuation bracket">[</span><span class="punctuation bracket">]</span><span class="type qualifier">const</span> <span class="type builtin">u8</span> <span class="punctuation bracket">{</span>
+  <span class="conditional">switch</span> <span class="punctuation bracket">(</span><span class="variable">minutes</span><span class="punctuation bracket">)</span> <span class="punctuation bracket">{</span>
+    <span class="number">0</span> =&gt; <span class="keyword return">return</span> <span class="string">&quot;прибув&quot;</span><span class="punctuation delimiter">,</span>
+    <span class="number">1</span><span class="punctuation delimiter">,</span> <span class="number">2</span> =&gt; <span class="keyword return">return</span> <span class="string">&quot;незабаром&quot;</span><span class="punctuation delimiter">,</span>
+    <span class="number">3</span><span class="punctuation special">...</span><span class="number">5</span> =&gt; <span class="keyword return">return</span> <span class="string">&quot;не більше 5 хвилин&quot;</span><span class="punctuation delimiter">,</span>
+    <span class="conditional">else</span> =&gt; <span class="punctuation bracket">{</span>
+      <span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="operator">!</span><span class="variable">is_late</span><span class="punctuation bracket">)</span> <span class="punctuation bracket">{</span>
+        <span class="keyword return">return</span> <span class="string">&quot;вибачте, потрібно трохи почекати&quot;</span><span class="punctuation delimiter">;</span>
+      <span class="punctuation bracket">}</span>
+      <span class="comment">// todo, щось дуже не так</span>
+      <span class="keyword return">return</span> <span class="string">&quot;ніколи&quot;</span><span class="punctuation delimiter">;</span>
+    <span class="punctuation bracket">}</span><span class="punctuation delimiter">,</span>
+  <span class="punctuation bracket">}</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+<p>Хоча <code>switch</code> корисний у ряді випадків, його вичерпна природа (в сенсі "потрібно перелічити всі можливі варіанти") справді сяє при роботі з змінними перелічувального типу (iterators), про які ми поговоримо незабаром.</p><p>Цикл <code>for</code> в Zig використовується для перебору масивів, зрізів і діапазонів. Наприклад, щоб перевірити, чи містить масив значення, ми можемо написати:</p><pre><code class="zig"><span class="keyword function">fn</span> <span class="function">contains</span><span class="punctuation bracket">(</span><span class="parameter">haystack</span><span class="punctuation delimiter">:</span> <span class="punctuation bracket">[</span><span class="punctuation bracket">]</span><span class="type qualifier">const</span> <span class="type builtin">u32</span><span class="punctuation delimiter">,</span> <span class="parameter">needle</span><span class="punctuation delimiter">:</span> <span class="type builtin">u32</span><span class="punctuation bracket">)</span> <span class="type builtin">bool</span> <span class="punctuation bracket">{</span>
+  <span class="repeat">for</span> <span class="punctuation bracket">(</span><span class="variable">haystack</span><span class="punctuation bracket">)</span> |<span class="variable">value</span>| <span class="punctuation bracket">{</span>
+    <span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="variable">needle</span> <span class="operator">==</span> <span class="variable">value</span><span class="punctuation bracket">)</span> <span class="punctuation bracket">{</span>
+       <span class="keyword return">return</span> <span class="boolean">true</span><span class="punctuation delimiter">;</span>
+    <span class="punctuation bracket">}</span>
+  <span class="punctuation bracket">}</span>
+  <span class="keyword return">return</span> <span class="boolean">false</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+<p>Цикли <code>for</code> можуть працювати з кількома послідовностями одночасно, якщо ці послідовності мають однакову довжину. Вище ми використовували функцію <code>std.mem.eql</code>. Ось як це (майже) виглядає:</p><pre><code class="zig"><span class="attribute">pub</span> <span class="keyword function">fn</span> <span class="function">eql</span><span class="punctuation bracket">(</span><span class="attribute">comptime</span> <span class="parameter">T</span><span class="punctuation delimiter">:</span> <span class="type builtin">type</span><span class="punctuation delimiter">,</span> <span class="parameter">a</span><span class="punctuation delimiter">:</span> <span class="punctuation bracket">[</span><span class="punctuation bracket">]</span><span class="type qualifier">const</span> <span class="variable">T</span><span class="punctuation delimiter">,</span> <span class="parameter">b</span><span class="punctuation delimiter">:</span> <span class="punctuation bracket">[</span><span class="punctuation bracket">]</span><span class="type qualifier">const</span> <span class="variable">T</span><span class="punctuation bracket">)</span> <span class="type builtin">bool</span> <span class="punctuation bracket">{</span>
+  <span class="comment">// якщо вони не мають однакової довжини, вони не можуть бути рівними</span>
+  <span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="variable">a</span><span class="punctuation delimiter">.</span><span class="field">len</span> <span class="operator">!=</span> <span class="variable">b</span><span class="punctuation delimiter">.</span><span class="field">len</span><span class="punctuation bracket">)</span> <span class="keyword return">return</span> <span class="boolean">false</span><span class="punctuation delimiter">;</span>
+
+  <span class="repeat">for</span> <span class="punctuation bracket">(</span><span class="variable">a</span><span class="punctuation delimiter">,</span> <span class="variable">b</span><span class="punctuation bracket">)</span> |<span class="variable">a_elem</span><span class="punctuation delimiter">,</span> <span class="variable">b_elem</span>| <span class="punctuation bracket">{</span>
+    <span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="variable">a_elem</span> <span class="operator">!=</span> <span class="variable">b_elem</span><span class="punctuation bracket">)</span> <span class="keyword return">return</span> <span class="boolean">false</span><span class="punctuation delimiter">;</span>
+  <span class="punctuation bracket">}</span>
+
+  <span class="keyword return">return</span> <span class="boolean">true</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+<p>Початкова перевірка <code>if</code> — це не просто хороша оптимізація швидкодії коду, це необхідний захист. Якщо ми виймемо його та передамо аргументи різної довжини, ми отримаємо паніку під час виконання: <em>for loop over objects with non-equal lengths</em>.</p><pre><code class="zig"><span class="repeat">for</span> <span class="punctuation bracket">(</span><span class="number">0</span><span class="punctuation special">..</span><span class="number">10</span><span class="punctuation bracket">)</span> |<span class="variable">i</span>|<span class="keyword"></span> <span class="punctuation bracket">{</span>
+  <span class="variable">std</span><span class="punctuation delimiter">.</span><span class="field">debug</span><span class="punctuation delimiter">.</span><span class="function">print</span><span class="punctuation bracket">(</span><span class="string">&quot;{d}\n&quot;</span><span class="punctuation delimiter">,</span> <span class="punctuation delimiter">.</span><span class="punctuation bracket">{</span><span class="variable">i</span><span class="punctuation bracket">}</span><span class="punctuation bracket">)</span><span class="error">;</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+<hr><blockquote><p>У нашому прикладі зі <code>switch</code> використано три крапки, <code>3...6</code>, тоді як у цьому - використовуються дві крапки, <code>0..10</code>. Це тому, що регістр <code>switch</code> включає обидва числа, тоді як <code>for</code> не включає верхню межу.</p></blockquote><hr><p>Це особливо круто у поєднанні з однією (чи кількома!) послідовністю:</p><pre><code class="zig"><span class="keyword function">fn</span> <span class="function">indexOf</span><span class="punctuation bracket">(</span><span class="parameter">haystack</span><span class="punctuation delimiter">:</span> <span class="punctuation bracket">[</span><span class="punctuation bracket">]</span><span class="type qualifier">const</span> <span class="type builtin">u32</span><span class="punctuation delimiter">,</span> <span class="parameter">needle</span><span class="punctuation delimiter">:</span> <span class="type builtin">u32</span><span class="punctuation bracket">)</span> <span class="operator">?</span><span class="type builtin">usize</span> <span class="punctuation bracket">{</span>
+  <span class="repeat">for</span> <span class="punctuation bracket">(</span><span class="variable">haystack</span><span class="punctuation delimiter">,</span> <span class="number">0</span><span class="punctuation special">..</span><span class="punctuation bracket">)</span> |<span class="variable">value</span><span class="punctuation delimiter">,</span> <span class="variable">i</span>| <span class="punctuation bracket">{</span>
+    <span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="variable">needle</span> <span class="operator">==</span> <span class="variable">value</span><span class="punctuation bracket">)</span> <span class="punctuation bracket">{</span>
+      <span class="keyword return">return</span> <span class="variable">i</span><span class="punctuation delimiter">;</span>
+    <span class="punctuation bracket">}</span>
+  <span class="punctuation bracket">}</span>
+  <span class="keyword return">return</span> <span class="constant builtin">null</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+<hr><blockquote><p>Це короткий огляд nullable типів.</p></blockquote><hr><p>Кінець діапазону визначається довжиною <code>haystack</code>, хоча ми могли б ускладнити життя себі та написати: <code>0..hastack.len</code>. Цикли <code>for</code> не підтримують більш загальний <code>init; compare; step</code> ідіому. Для цього ми покладаємося на <code>while</code>.</p><p>Оскільки <code>while</code> є простішим і приймає форму <code>while (умова) { }</code>, ми маємо більше контролю над ітерацією. Наприклад, підраховуючи кількість керуючих послідовностей у рядку, нам потрібно збільшити наш ітератор на 2, щоб уникнути подвійного підрахунку <code>\</code>:</p><pre><code class="zig"><span class="type qualifier">var</span> <span class="variable">escape_count</span><span class="punctuation delimiter">:</span> <span class="type builtin">usize</span> = <span class="number">0</span><span class="punctuation delimiter">;</span>
+<span class="error">{</span>
+  <span class="type qualifier">var</span> <span class="variable">i</span><span class="punctuation delimiter">:</span> <span class="type builtin">usize</span> = <span class="number">0</span><span class="punctuation delimiter">;</span>
+  <span class="repeat">while</span> <span class="punctuation bracket">(</span><span class="variable">i</span> <span class="operator">&lt;</span> <span class="variable">src</span><span class="punctuation delimiter">.</span><span class="field">len</span><span class="punctuation bracket">)</span><span class="keyword"></span> <span class="punctuation bracket">{</span>
+    <span class="comment">// зворотний слеш використовується як символ екранування, тому нам потрібно його екранувати...</span>
+    <span class="comment">// зворотнім слешем</span>
+    <span class="error">if (src[i] == &apos;\\&apos;) {
+      i += 2;
+      escape_count += 1;
+    } else {
+      i += 1;
+    }
+  }</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+<p>Ми додали явний блок навколо нашої тимчасової змінної <code>i</code> та циклу <code>while</code>. Це звужує межі застосування <code>i</code>. Такі блоки можуть бути корисними, хоча в цьому випадку це, ймовірно, надмірно. Тим не менш, наведений вище приклад максимально близький до традиційного циклу <code>for(init; compare; step)</code>, який має Zig.</p><p><code>while</code> може мати пункт <code>else</code>, який виконується, коли умова хибна. Він також приймає оператор для виконання після кожної ітерації. Може бути кілька операторів, розділених символом <code>;</code>. Ця функція зазвичай використовувалася перед тим як <code>for</code> почав підтримку кількох послідовностей. Вищесказане можна записати так:</p><pre><code class="zig"><span class="type qualifier">var</span> <span class="variable">i</span><span class="punctuation delimiter">:</span> <span class="type builtin">usize</span> = <span class="number">0</span><span class="punctuation delimiter">;</span>
+<span class="type qualifier">var</span> <span class="variable">escape_count</span><span class="punctuation delimiter">:</span> <span class="type builtin">usize</span> = <span class="number">0</span><span class="punctuation delimiter">;</span>
+
+<span class="comment">//                   ця частина</span>
+<span class="repeat">while</span> <span class="punctuation bracket">(</span><span class="variable">i</span> <span class="operator">&lt;</span> <span class="variable">src</span><span class="punctuation delimiter">.</span><span class="field">len</span><span class="punctuation bracket">)</span> <span class="punctuation delimiter">:</span> <span class="punctuation bracket">(</span><span class="variable">i</span> <span class="operator">+=</span> <span class="number">1</span><span class="punctuation bracket">)</span> <span class="error">{</span>
+  <span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="variable">src</span><span class="punctuation bracket">[</span><span class="variable">i</span><span class="punctuation bracket">]</span> <span class="operator">==</span> <span class="character">&apos;\\&apos;</span><span class="punctuation bracket">)</span><span class="keyword"></span> <span class="punctuation bracket">{</span>
+    <span class="comment">// +1 here, and +1 above == +2</span>
+    <span class="variable">i</span> <span class="error">+=</span> <span class="number">1</span><span class="error">;
+    escape_count +=</span> <span class="number">1</span><span class="error">;</span>
+  <span class="punctuation bracket">}</span>
+<span class="error">}</span>
+</code></pre>
+<p><code>break</code> і <code>continue</code> використовуються або для виходу з самого внутрішнього циклу, або для переходу до наступної ітерації.</p><p>Блоки можна позначати, а <code>break</code> і <code>continue</code> можуть націлюватися на певну мітку. Надуманий приклад:</p><pre><code class="zig"><span class="label">outer</span><span class="punctuation delimiter">:</span> <span class="error">for (1..10) |i|</span> <span class="punctuation bracket">{</span>
+  <span class="repeat">for</span> <span class="punctuation bracket">(</span><span class="variable">i</span><span class="punctuation special">..</span><span class="number">10</span><span class="punctuation bracket">)</span> |<span class="variable">j</span>| <span class="punctuation bracket">{</span>
+    <span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="variable">i</span> <span class="operator">*</span> <span class="variable">j</span> <span class="operator">&gt;</span> <span class="punctuation bracket">(</span><span class="variable">i</span><span class="operator">+</span><span class="variable">i</span> <span class="operator">+</span> <span class="variable">j</span><span class="operator">+</span><span class="variable">j</span><span class="punctuation bracket">)</span><span class="punctuation bracket">)</span> <span class="repeat">continue</span> <span class="punctuation delimiter">:</span><span class="label">outer</span><span class="punctuation delimiter">;</span>
+      <span class="variable">std</span><span class="punctuation delimiter">.</span><span class="field">debug</span><span class="punctuation delimiter">.</span><span class="function">print</span><span class="punctuation bracket">(</span><span class="string">&quot;{d} + {d} &gt;= {d} * {d}\n&quot;</span><span class="punctuation delimiter">,</span> <span class="punctuation delimiter">.</span><span class="punctuation bracket">{</span><span class="variable">i</span><span class="operator">+</span><span class="variable">i</span><span class="punctuation delimiter">,</span> <span class="variable">j</span><span class="operator">+</span><span class="variable">j</span><span class="punctuation delimiter">,</span> <span class="variable">i</span><span class="punctuation delimiter">,</span> <span class="variable">j</span><span class="punctuation bracket">}</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+    <span class="punctuation bracket">}</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+<p><code>break</code> має іншу цікаву поведінку, повертаючи значення з блоку:</p><pre><code class="zig"><span class="type qualifier">const</span> <span class="variable">personality_analysis</span> = <span class="label">blk</span><span class="punctuation delimiter">:</span> <span class="punctuation bracket">{</span>
+  <span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="variable">tea_vote</span> <span class="operator">&gt;</span> <span class="variable">coffee_vote</span><span class="punctuation bracket">)</span> <span class="repeat">break</span> <span class="punctuation delimiter">:</span><span class="label">blk</span> <span class="string">&quot;в здоровому глузді&quot;</span><span class="punctuation delimiter">;</span>
+  <span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="variable">tea_vote</span> <span class="operator">==</span> <span class="variable">coffee_vote</span><span class="punctuation bracket">)</span> <span class="repeat">break</span> <span class="punctuation delimiter">:</span><span class="label">blk</span> <span class="string">&quot;ніякий&quot;</span><span class="punctuation delimiter">;</span>
+  <span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="variable">tea_vote</span> <span class="operator">&lt;</span> <span class="variable">coffee_vote</span><span class="punctuation bracket">)</span> <span class="repeat">break</span> <span class="punctuation delimiter">:</span><span class="label">blk</span> <span class="string">&quot;небезпечний&quot;</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span><span class="punctuation delimiter">;</span>
+</code></pre>
+<p>Такі блоки повинні закінчуватися крапкою з комою.</p><p>Пізніше, коли ми досліджуватимемо об’єднання тегів, об’єднання помилок і додаткові типи, ми побачимо, що ще можуть запропонувати ці структури потоку керування.</p><h2>Переліки (Enums)</h2><p>Переліки — це набір цілочисельних констант, кожній з яких надано імʼя. Вони визначаються подібно до структури:</p><pre><code class="zig"><span class="comment">// повинен бути публічним &quot;pub&quot;</span>
+<span class="type qualifier">const</span> <span class="variable">Status</span> = <span class="keyword">enum</span> <span class="punctuation bracket">{</span>
+  <span class="variable">ok</span><span class="punctuation delimiter">,</span>
+  <span class="variable">bad</span><span class="punctuation delimiter">,</span>
+  <span class="variable">unknown</span><span class="punctuation delimiter">,</span>
+<span class="punctuation bracket">}</span><span class="punctuation delimiter">;</span>
+</code></pre>
+<p>І, як і структура, може містити інші визначення, включаючи функції, які можуть або не можуть приймати перелік як параметр:</p><pre><code class="zig"><span class="type qualifier">const</span> <span class="variable">Stage</span> = <span class="keyword">enum</span> <span class="punctuation bracket">{</span>
+  <span class="variable">validate</span><span class="punctuation delimiter">,</span>
+  <span class="variable">awaiting_confirmation</span><span class="punctuation delimiter">,</span>
+  <span class="variable">confirmed</span><span class="punctuation delimiter">,</span>
+  <span class="variable">err</span><span class="punctuation delimiter">,</span>
+
+  <span class="keyword function">fn</span> <span class="function">isComplete</span><span class="punctuation bracket">(</span><span class="parameter">self</span><span class="punctuation delimiter">:</span> <span class="variable">Stage</span><span class="punctuation bracket">)</span> <span class="type builtin">bool</span> <span class="punctuation bracket">{</span>
+    <span class="keyword return">return</span> <span class="variable">self</span> <span class="operator">==</span> <span class="punctuation delimiter">.</span><span class="variable builtin">confirmed</span> <span class="keyword operator">or</span> <span class="variable">self</span> <span class="operator">==</span> <span class="punctuation delimiter">.</span><span class="variable builtin">err</span><span class="punctuation delimiter">;</span>
+  <span class="punctuation bracket">}</span>
+<span class="punctuation bracket">}</span><span class="punctuation delimiter">;</span>
+</code></pre>
+<hr><blockquote><p>Якщо вам потрібно рядкове представлення переліку, ви можете скористатися вбудованою функцією <code>@tagName(enum)</code>.</p></blockquote><hr><p>Типи структур виклику можна вивести на основі їх призначеного або повернутого типу за допомогою нотації <code>.{...}</code>. Вище ми бачимо, що тип <code>enum</code> виводиться на основі його порівняння з <code>self</code>, який має тип <code>Stage</code>. Ми могли б бути чіткими і написати: <code>return self == Stage.confirmed або self == Stage.err;</code>. Але, маючи справу з переліками, ви часто побачите, що тип переліку пропущено через нотацію <code>.$value</code>. Це називається <em>літералом переліку</em>.</p><p>Вичерпна природа <code>switch</code> робить його гарним поєднанням з переліком (<code>enum</code>), оскільки це гарантує, що ви обробили всі можливі випадки. Проте будьте обережні, використовуючи <code>else</code> гілку в <code>switch</code>, оскільки воно відповідатиме будь-яким нещодавно доданим значенням переліку, що може не відповідати бажаній поведінці.</p><h2>Марковані Об’єднання (Tagged Unions)</h2><p>Об’єднання визначає набір типів, які може мати значення. Наприклад, об’єднання <code>Number</code> може бути <code>integer</code>, <code>float</code> або <code>nan</code> (не число):</p><p><em>learning.zig</em></p><pre><code class="zig"><span class="type qualifier">const</span> <span class="variable">std</span> = <span class="function builtin">@import</span><span class="punctuation bracket">(</span><span class="string">&quot;std&quot;</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+
+<span class="attribute">pub</span> <span class="keyword function">fn</span> <span class="function">main</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span> <span class="type builtin">void</span> <span class="punctuation bracket">{</span>
+  <span class="type qualifier">const</span> <span class="variable">n</span> = <span class="variable">Number</span><span class="punctuation bracket">{</span><span class="punctuation delimiter">.</span><span class="field">int</span> = <span class="number">32</span><span class="punctuation bracket">}</span><span class="punctuation delimiter">;</span>
+  <span class="variable">std</span><span class="punctuation delimiter">.</span><span class="field">debug</span><span class="punctuation delimiter">.</span><span class="function">print</span><span class="punctuation bracket">(</span><span class="string">&quot;{d}\n&quot;</span><span class="punctuation delimiter">,</span> <span class="punctuation delimiter">.</span><span class="punctuation bracket">{</span><span class="variable">n</span><span class="punctuation delimiter">.</span><span class="field">int</span><span class="punctuation bracket">}</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span>
+
+<span class="type qualifier">const</span> <span class="variable">Number</span> = <span class="keyword">union</span> <span class="punctuation bracket">{</span>
+  <span class="field">int</span><span class="punctuation delimiter">:</span> <span class="type builtin">i64</span><span class="punctuation delimiter">,</span>
+  <span class="field">float</span><span class="punctuation delimiter">:</span> <span class="type builtin">f64</span><span class="punctuation delimiter">,</span>
+  <span class="field">nan</span><span class="punctuation delimiter">:</span> <span class="type builtin">void</span><span class="punctuation delimiter">,</span>
+<span class="punctuation bracket">}</span><span class="punctuation delimiter">;</span>
+</code></pre>
+<p>Об’єднання може мати лише один набір полів за раз; спроба отримати доступ до невстановленого поля є помилкою. Оскільки ми встановили поле <code>int</code>, якщо ми потім спробуємо отримати доступ до <code>n.float</code>, ми отримаємо помилку. Одне з наших полів, <code>nan</code>, має тип <code>void</code>. Як би ми встановили його значення? Використовуйте <code>{}</code>:</p><pre><code class="zig"><span class="type qualifier">const</span> <span class="variable">n</span> = <span class="variable">Number</span><span class="punctuation bracket">{</span><span class="punctuation delimiter">.</span><span class="field">nan</span> = <span class="punctuation bracket">{</span><span class="punctuation bracket">}</span><span class="punctuation bracket">}</span><span class="punctuation delimiter">;</span>
+</code></pre>
+<p>Проблема з обʼєднаннями полягає в тому, щоб знати, яке поле встановлено. Тут вступають у гру тегові обʼєднання. Об’єднання з тегами (tagged union) об’єднує перелік (enum) із об’єднанням (union), яке можна використовувати в операторі <code>switch</code>. Розглянемо цей приклад:</p><p><em>learning.zig</em></p><pre><code class="zig"><span class="attribute">pub</span> <span class="keyword function">fn</span> <span class="function">main</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span> <span class="type builtin">void</span> <span class="punctuation bracket">{</span>
+  <span class="type qualifier">const</span> <span class="variable">ts</span> = <span class="variable">Timestamp</span><span class="punctuation bracket">{</span><span class="punctuation delimiter">.</span><span class="field">unix</span> = <span class="number">1693278411</span><span class="punctuation bracket">}</span><span class="punctuation delimiter">;</span>
+  <span class="variable">std</span><span class="punctuation delimiter">.</span><span class="field">debug</span><span class="punctuation delimiter">.</span><span class="function">print</span><span class="punctuation bracket">(</span><span class="string">&quot;{d}\n&quot;</span><span class="punctuation delimiter">,</span> <span class="punctuation delimiter">.</span><span class="punctuation bracket">{</span><span class="variable">ts</span><span class="punctuation delimiter">.</span><span class="function">seconds</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span><span class="punctuation bracket">}</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span>
+
+<span class="type qualifier">const</span> <span class="variable">TimestampType</span> = <span class="keyword">enum</span> <span class="punctuation bracket">{</span>
+  <span class="variable">unix</span><span class="punctuation delimiter">,</span>
+  <span class="variable">datetime</span><span class="punctuation delimiter">,</span>
+<span class="punctuation bracket">}</span><span class="punctuation delimiter">;</span>
+
+<span class="type qualifier">const</span> <span class="variable">Timestamp</span> = <span class="keyword">union</span><span class="punctuation bracket">(</span><span class="variable">TimestampType</span><span class="punctuation bracket">)</span> <span class="punctuation bracket">{</span>
+  <span class="constant">unix</span><span class="punctuation delimiter">:</span> <span class="type builtin">i32</span><span class="punctuation delimiter">,</span>
+  <span class="constant">datetime</span><span class="punctuation delimiter">:</span> <span class="variable">DateTime</span><span class="punctuation delimiter">,</span>
+
+  <span class="type qualifier">const</span> <span class="variable">DateTime</span> = <span class="keyword">struct</span> <span class="punctuation bracket">{</span>
+    <span class="field">year</span><span class="punctuation delimiter">:</span> <span class="type builtin">u16</span><span class="punctuation delimiter">,</span>
+    <span class="field">month</span><span class="punctuation delimiter">:</span> <span class="type builtin">u8</span><span class="punctuation delimiter">,</span>
+    <span class="field">day</span><span class="punctuation delimiter">:</span> <span class="type builtin">u8</span><span class="punctuation delimiter">,</span>
+    <span class="field">hour</span><span class="punctuation delimiter">:</span> <span class="type builtin">u8</span><span class="punctuation delimiter">,</span>
+    <span class="field">minute</span><span class="punctuation delimiter">:</span> <span class="type builtin">u8</span><span class="punctuation delimiter">,</span>
+    <span class="field">second</span><span class="punctuation delimiter">:</span> <span class="type builtin">u8</span><span class="punctuation delimiter">,</span>
+  <span class="punctuation bracket">}</span><span class="punctuation delimiter">;</span>
+
+  <span class="keyword function">fn</span> <span class="function">seconds</span><span class="punctuation bracket">(</span><span class="parameter">self</span><span class="punctuation delimiter">:</span> <span class="variable">Timestamp</span><span class="punctuation bracket">)</span> <span class="type builtin">u16</span> <span class="punctuation bracket">{</span>
+    <span class="conditional">switch</span> <span class="punctuation bracket">(</span><span class="variable">self</span><span class="punctuation bracket">)</span> <span class="punctuation bracket">{</span>
+      <span class="punctuation delimiter">.</span><span class="variable builtin">datetime</span> =&gt; <span class="punctuation bracket">|dt|</span> <span class="keyword return">return</span> <span class="variable">dt</span><span class="punctuation delimiter">.</span><span class="field">second</span><span class="punctuation delimiter">,</span>
+      <span class="punctuation delimiter">.</span><span class="variable builtin">unix</span> =&gt; <span class="punctuation bracket">|ts|</span> <span class="punctuation bracket">{</span>
+        <span class="type qualifier">const</span> <span class="variable">seconds_since_midnight</span><span class="punctuation delimiter">:</span> <span class="type builtin">i32</span> = <span class="function builtin">@rem</span><span class="punctuation bracket">(</span><span class="variable">ts</span><span class="punctuation delimiter">,</span> <span class="number">86400</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+        <span class="keyword return">return</span> <span class="function builtin">@intCast</span><span class="punctuation bracket">(</span><span class="function builtin">@rem</span><span class="punctuation bracket">(</span><span class="variable">seconds_since_midnight</span><span class="punctuation delimiter">,</span> <span class="number">60</span><span class="punctuation bracket">)</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+      <span class="punctuation bracket">}</span><span class="punctuation delimiter">,</span>
+    <span class="punctuation bracket">}</span>
+  <span class="punctuation bracket">}</span>
+<span class="punctuation bracket">}</span><span class="punctuation delimiter">;</span>
+</code></pre>
+<p>Зверніть увагу, що кожен регістр у нашому <code>switch</code> фіксує введене значення поля. Тобто <code>dt</code> — це <code>Timestamp.DateTime</code>, а <code>ts</code> — це <code>i32</code>. Це також перший раз, коли ми бачимо структуру, вкладену в інший тип. <code>DateTime</code> міг бути визначений поза об’єднанням. Ми також бачимо дві нові вбудовані функції: <code>@rem</code> для отримання залишку та <code>@intCast</code> для перетворення результату в <code>u16</code> (<code>@intCast</code> робить висновок, що ми хочемо <code>u16</code> з нашого типу повернення).</p><p>Як ми бачимо з наведеного вище прикладу, об’єднання з тегами можна використовувати як інтерфейси, за умови, що всі можливі реалізації відомі заздалегідь і можуть бути запікані в об’єднання з тегами.</p><p>Нарешті, тип переліку тегованого об’єднання можна зробити висновком. Замість того, щоб визначати <code>TimestampType</code>, ми могли б зробити так:</p><pre><code class="zig"><span class="error">const Timestamp = union(enum) {
+  unix: i32,
+  datetime: DateTime,
+
+  ...</span>
+</code></pre>
+<p>і Zig створив би неявний перелік на основі полів нашого об’єднання.</p><h2>Необовʼязкове Значення (Optional)</h2><p>Будь-яке значення можна оголосити необов’язковим, додавши перед типом знак питання <code>?</code>. Необов’язкові типи можуть мати значення <code>null</code> або значення визначеного типу:</p><pre><code class="zig"><span class="type qualifier">var</span> <span class="variable">home</span><span class="punctuation delimiter">:</span> <span class="operator">?</span><span class="punctuation bracket">[</span><span class="punctuation bracket">]</span><span class="type qualifier">const</span> <span class="type builtin">u8</span> = <span class="constant builtin">null</span><span class="punctuation delimiter">;</span>
+<span class="type qualifier">var</span> <span class="variable">name</span><span class="punctuation delimiter">:</span> <span class="operator">?</span><span class="punctuation bracket">[</span><span class="punctuation bracket">]</span><span class="type qualifier">const</span> <span class="type builtin">u8</span> = <span class="string">&quot;Leto&quot;</span><span class="punctuation delimiter">;</span>
+</code></pre>
+<p>Необхідність мати явний тип має бути зрозумілою: якби ми щойно виконали <code>const name = &quot;Leto&quot;;</code>, тоді виведеним типом буде необов’язковий <code>[]const u8</code>.</p><p><code>.?</code> використовується для доступу до значення за додатковим типом:</p><pre><code class="zig"><span class="variable">std</span><span class="punctuation delimiter">.</span><span class="field">debug</span><span class="punctuation delimiter">.</span><span class="function">print</span><span class="punctuation bracket">(</span><span class="string">&quot;{s}\n&quot;</span><span class="punctuation delimiter">,</span> <span class="punctuation delimiter">.</span><span class="punctuation bracket">{</span><span class="variable">name</span><span class="operator">.?</span><span class="punctuation bracket">}</span><span class="punctuation bracket">)</span><span class="error">;</span>
+</code></pre>
+<p>Але ми отримаємо паніку під час виконання, якщо використаємо <code>.?</code> для null. Оператор <code>if</code> може безпечно розгорнути необов’язковий тип:</p><pre><code class="zig"><span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="variable">home</span><span class="punctuation bracket">)</span> <span class="punctuation bracket">|h|</span><span class="keyword"></span> <span class="punctuation bracket">{</span>
+  <span class="comment">// h це []const u8. тобто ми &quot;розгорнули&quot; необов’язкове значення</span>
+  <span class="comment">// і тут ми маємо реальне значення змінної home</span>
+<span class="punctuation bracket">}</span> <span class="conditional">else</span><span class="keyword"></span> <span class="punctuation bracket">{</span>
+  <span class="comment">// а тут у нас немає значення змінної і ми можемо це опрацювати</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+<p><code>orelse</code> можна використовувати для розгортання необов'язкового значення або виконання коду. Це зазвичай використовують як значення за замовчуванням або повернення з функції:</p><pre><code class="zig"><span class="type qualifier">const</span> <span class="variable">h</span> = <span class="variable">home</span> <span class="operator">orelse</span> <span class="string">&quot;unknown&quot;</span>
+<span class="comment">// або може бути</span>
+
+<span class="comment">// вийти з нашої функції</span><span class="punctuation delimiter"></span>
+<span class="type qualifier">const</span> <span class="variable">h</span> = <span class="variable">home</span> <span class="operator">orelse</span> <span class="keyword return">return</span><span class="punctuation delimiter">;</span>
+</code></pre>
+<p>Однак <code>orelse</code> також може мати блок і виконувати складнішу логіку. Необов’язкові типи також інтегруються з <code>while</code> і часто використовуються для створення ітераторів. Ми не будемо створювати ітератор, але, сподіваюся, цей фіктивний код має сенс:</p><pre><code class="zig"><span class="repeat">while</span> <span class="punctuation bracket">(</span><span class="variable">rows</span><span class="punctuation delimiter">.</span><span class="function">next</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span><span class="punctuation bracket">)</span> <span class="punctuation bracket">|row|</span><span class="keyword"></span> <span class="punctuation bracket">{</span>
+  <span class="comment">// зробити щось з нашим рядком</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+<h2>Ініціалізатор (Undefined)</h2><p>Поки що кожна окрема змінна, яку ми бачили, була ініціалізована якимсь значенням. Але іноді ми не знаємо значення змінної, коли її оголошено. Необовʼязкові значення (optionals) є одним із варіантів, але не завжди це має сенс. У таких випадках ми можемо встановити змінним значення <code>undefined</code>, щоб залишити їх неініціалізованими.</p><p>Одне місце, де це зазвичай робиться, це під час створення масиву, який буде заповнений деякою функцією:</p><pre><code class="zig"><span class="type qualifier">var</span> <span class="variable">pseudo_uuid</span><span class="punctuation delimiter">:</span> <span class="punctuation bracket">[</span><span class="number">16</span><span class="punctuation bracket">]</span><span class="type builtin">u8</span> = <span class="constant builtin">undefined</span><span class="punctuation delimiter">;</span>
+<span class="variable">std</span><span class="punctuation delimiter">.</span><span class="field">crypto</span><span class="punctuation delimiter">.</span><span class="field">random</span><span class="punctuation delimiter">.</span><span class="function">bytes</span><span class="punctuation bracket">(</span><span class="operator">&</span><span class="variable">pseudo_uuid</span><span class="punctuation bracket">)</span><span class="error">;</span>
+</code></pre>
+<p>Наведене вище все ще створює масив із 16 байтів, але залишає пам’ять неініціалізованою.</p><h2>Помилки та їх опрацювання</h2><p>Zig має прості та практичні можливості обробки помилок. Все починається з наборів помилок, які виглядають і поводяться як enum:</p><pre><code class="zig"><span class="comment">// Як і наша структура в частині 1, OpenError можна позначити як &quot;pub&quot;</span>
+<span class="comment">// щоб зробити його доступним поза файлом, у якому він визначений</span>
+<span class="type qualifier">const</span> <span class="variable">OpenError</span> = <span class="keyword">error</span> <span class="punctuation bracket">{</span>
+  <span class="variable builtin">AccessDenied</span><span class="punctuation delimiter">,</span>
+  <span class="variable builtin">NotFound</span><span class="punctuation delimiter">,</span>
+<span class="punctuation bracket">}</span><span class="punctuation delimiter">;</span>
+</code></pre>
+<p>Функції, включаючи <code>main</code>, тепер може повертати цю помилку:</p><p><em>learning.zig</em></p><pre><code class="zig"><span class="attribute">pub</span> <span class="keyword function">fn</span> <span class="function">main</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span> <span class="type builtin">void</span> <span class="punctuation bracket">{</span>
+  <span class="keyword return">return</span> <span class="variable">OpenError</span><span class="punctuation delimiter">.</span><span class="field">AccessDenied</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span>
+
+<span class="type qualifier">const</span> <span class="variable">OpenError</span> = <span class="keyword">error</span> <span class="punctuation bracket">{</span>
+  <span class="variable builtin">AccessDenied</span><span class="punctuation delimiter">,</span>
+  <span class="variable builtin">NotFound</span><span class="punctuation delimiter">,</span>
+<span class="punctuation bracket">}</span><span class="punctuation delimiter">;</span>
+</code></pre>
+<p>Якщо ви спробуєте запустити це, то ви отримаєте повідомлення про помилку: <em>expected type 'void', found 'error{AccessDenied,NotFound}'</em>. Це має сенс: ми визначили <code>main</code> з типом повернення <code>void</code>, але ми щось повертаємо (помилку, звичайно, але це вже не <code>void</code>). Щоб вирішити цю проблему, нам потрібно змінити тип повернення функції.</p><pre><code class="zig"><span class="attribute">pub</span> <span class="keyword function">fn</span> <span class="function">main</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span> <span class="variable">OpenError</span><span class="exception">!</span><span class="type builtin">void</span> <span class="punctuation bracket">{</span>
+  <span class="keyword return">return</span> <span class="variable">OpenError</span><span class="punctuation delimiter">.</span><span class="field">AccessDenied</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+<p>Це називається типом об’єднання помилок і вказує на те, що наша функція може повертати помилку <code>OpenError</code> або <code>void</code>. Поки що ми були досить чіткими: ми створили набір помилок для можливих помилок, які може повернути наша функція, і використали цей набір помилок у типі повернення об’єднання помилок нашої функції. Але коли справа доходить до реальних проектів, Zig має кілька хитрих прийомів у своєму рукаві. По-перше, замість того, щоб вказувати об’єднання помилок як <code>error set!return type</code>, ми можемо дозволити Zig вивести набір помилок за допомогою: <code>!return type</code>. Таким чином, ми могли б і, ймовірно, визначили б наш <code>main</code> як:</p><pre><code class="zig"><span class="attribute">pub</span> <span class="keyword function">fn</span> <span class="function">main</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span> <span class="exception">!</span><span class="type builtin">void</span><span class="punctuation delimiter"></span>
+</code></pre>
+<p>По-друге, Zig здатний неявно створювати для нас набори помилок. Замість створення нашого набору помилок ми могли б зробити:</p><pre><code class="zig"><span class="attribute">pub</span> <span class="keyword function">fn</span> <span class="function">main</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span> <span class="exception">!</span><span class="type builtin">void</span> <span class="punctuation bracket">{</span>
+  <span class="keyword return">return</span> <span class="keyword">error</span><span class="punctuation delimiter">.</span><span class="variable builtin">AccessDenied</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+<p>Наші повністю явні та неявні підходи не зовсім еквівалентні. Наприклад, посилання на функції з неявними наборами помилок вимагають використання спеціального типу <code>anyerror</code>. Розробники бібліотек можуть побачити переваги більшої чіткості, наприклад самодокументованого коду. Тим не менш, я вважаю, що і неявні набори помилок, і об’єднання виведених помилок є прагматичними; Я активно використовую обидва.</p><p>Справжньою цінністю об’єднань помилок є вбудована підтримка мови у формі <code>catch</code> і <code>try</code>. Виклик функції, яка повертає об’єднання помилок, може включати <code>catch</code>. Наприклад, бібліотека http-сервера може мати такий код:</p><pre><code class="zig"><span class="variable">action</span><span class="punctuation bracket">(</span><span class="variable">req</span><span class="punctuation delimiter">,</span> <span class="variable">res</span><span class="punctuation bracket">)</span> <span class="variable">catch</span> <span class="error">|err| {
+  if (err == error.BrokenPipe or err == error.ConnectionResetByPeer) {
+    return;
+  } else if (err == error.BodyTooBig) {
+    res.status = 431;
+    res.body = &quot;Request body is too big&quot;;
+  } else {
+    res.status = 500;
+    res.body = &quot;Internal Server Error&quot;;
+    // todo: log err
+  }
+};</span>
+</code></pre>
+<p>Версія <code>switch</code> більш ідіоматична:</p><pre><code class="zig"><span class="variable">action</span><span class="punctuation bracket">(</span><span class="variable">req</span><span class="punctuation delimiter">,</span> <span class="variable">res</span><span class="punctuation bracket">)</span> <span class="variable">catch</span> <span class="error">|err|</span> <span class="conditional">switch</span> <span class="punctuation bracket">(</span><span class="variable">err</span><span class="punctuation bracket">)</span> <span class="punctuation bracket">{</span>
+  <span class="keyword">error</span><span class="punctuation delimiter">.</span><span class="variable builtin">BrokenPipe</span><span class="punctuation delimiter">,</span> <span class="keyword">error</span><span class="punctuation delimiter">.</span><span class="variable builtin">ConnectionResetByPeer</span><span class="error">)</span> =&gt; <span class="keyword return">return</span><span class="punctuation delimiter">,</span>
+  <span class="keyword">error</span><span class="punctuation delimiter">.</span><span class="variable builtin">BodyTooBig</span> =&gt; <span class="punctuation bracket">{</span>
+    <span class="variable">res</span><span class="punctuation delimiter">.</span><span class="field">status</span> <span class="operator">=</span> <span class="number">431</span><span class="punctuation delimiter">;</span>
+    <span class="variable">res</span><span class="punctuation delimiter">.</span><span class="field">body</span> <span class="operator">=</span> <span class="string">&quot;Request body is too big&quot;</span><span class="punctuation delimiter">;</span>
+  <span class="punctuation bracket">}</span><span class="punctuation delimiter">,</span>
+  <span class="conditional">else</span> =&gt; <span class="punctuation bracket">{</span>
+    <span class="variable">res</span><span class="punctuation delimiter">.</span><span class="field">status</span> <span class="operator">=</span> <span class="number">500</span><span class="punctuation delimiter">;</span>
+    <span class="variable">res</span><span class="punctuation delimiter">.</span><span class="field">body</span> <span class="operator">=</span> <span class="string">&quot;Internal Server Error&quot;</span><span class="punctuation delimiter">;</span>
+  <span class="punctuation bracket">}</span>
+<span class="punctuation bracket">}</span><span class="error">;</span>
+</code></pre>
+<p>Це все досить дивно, але давайте будемо чесними, найімовірніше, що ви збираєтеся зробити в <code>catch</code>, це повідомити про помилку викликаючому:</p><pre><code class="zig"><span class="variable">action</span><span class="punctuation bracket">(</span><span class="variable">req</span><span class="punctuation delimiter">,</span> <span class="variable">res</span><span class="punctuation bracket">)</span> <span class="variable">catch</span> <span class="error">|err| return err;</span>
+</code></pre>
+<p>Це настільки поширене явище, що це те, що робить <code>try</code>. Замість вищезазначеного ми робимо:</p><pre><code class="zig"><span class="variable">try</span> <span class="variable">action</span><span class="punctuation bracket">(</span><span class="variable">req</span><span class="punctuation delimiter">,</span> <span class="variable">res</span><span class="punctuation bracket">)</span><span class="error">;</span>
+</code></pre>
+<p>Це особливо корисно, враховуючи, що <strong>помилка повинна бути оброблена</strong>. Швидше за все, ви зробите це за допомогою <code>try</code> або <code>catch</code>.</p><hr><blockquote><p>Розробники Go помітять, що <code>try</code> потребує менше натискань клавіш, ніж <code>if err != nil { return err }</code>.</p></blockquote><hr><p>Здебільшого ви будете використовувати <code>try</code> і <code>catch</code>, але об'єднання помилок також підтримуються в <code>if</code> і <code>while</code>, подібно до необов'язкових типів. У випадку <code>while</code>, якщо умова повертає помилку, виконується пропозиція <code>else</code>.</p><p>Існує спеціальний тип <code>anyerror</code>, який може містити будь-яку помилку. Хоча ми могли б визначити функцію як таку, що повертає <code>anyerror!TYPE</code>, а не <code>!TYPE</code>, ці дві функції не еквівалентні. Виявлений набір помилок створюється на основі того, що може повернути функція. <code>anyerror</code> — це глобальний набір помилок, надмножина всіх наборів помилок у програмі. Таким чином, використання <code>anyerror</code> у сигнатурі функції, ймовірно, означає, що ваша функція може повертати помилки, які насправді вона не може. <code>anyerror</code> використовується для параметрів функції або полів структури, які можуть працювати з будь-якою помилкою (уявіть собі бібліотеку журналювання).</p><p>Нерідко функція повертає помилку необов’язкового типу union. Зі встановленою помилкою це виглядає так:</p><pre><code class="zig"><span class="comment">// завантажити останню збережену гру</span>
+<span class="attribute">pub</span> <span class="keyword function">fn</span> <span class="function">loadLast</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span> <span class="exception">!</span><span class="operator">?</span><span class="variable">Save</span> <span class="punctuation bracket">{</span>
+  <span class="comment">// TODO</span>
+  <span class="keyword return">return</span> <span class="constant builtin">null</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span>
+</code></pre>
+<p>Існують різні способи використання таких функцій, але найкомпактнішим є використання <code>try</code>, щоб розгорнути нашу помилку, а потім <code>orelse</code>, щоб розгорнути необовʼязковий тип. Ось робочий скелет:</p><p><em>learning.zig</em></p><pre><code class="zig"><span class="type qualifier">const</span> <span class="variable">std</span> = <span class="function builtin">@import</span><span class="punctuation bracket">(</span><span class="string">&quot;std&quot;</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+
+<span class="attribute">pub</span> <span class="keyword function">fn</span> <span class="function">main</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span> <span class="type builtin">void</span> <span class="punctuation bracket">{</span>
+  <span class="comment">// Це лінія, на якій ви хочете зосередитися</span>
+  <span class="type qualifier">const</span> <span class="variable">save</span> = <span class="punctuation bracket">(</span><span class="operator">try</span> <span class="variable">Save</span><span class="punctuation delimiter">.</span><span class="function">loadLast</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span><span class="punctuation bracket">)</span> <span class="operator">orelse</span> <span class="variable">Save</span><span class="punctuation delimiter">.</span><span class="function">blank</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+  <span class="variable">std</span><span class="punctuation delimiter">.</span><span class="field">debug</span><span class="punctuation delimiter">.</span><span class="function">print</span><span class="punctuation bracket">(</span><span class="string">&quot;{any}\n&quot;</span><span class="punctuation delimiter">,</span> <span class="punctuation delimiter">.</span><span class="punctuation bracket">{</span><span class="variable">save</span><span class="punctuation bracket">}</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+<span class="punctuation bracket">}</span>
+
+<span class="attribute">pub</span> <span class="type qualifier">const</span> <span class="variable">Save</span> = <span class="keyword">struct</span> <span class="punctuation bracket">{</span>
+  <span class="field">lives</span><span class="punctuation delimiter">:</span> <span class="type builtin">u8</span><span class="punctuation delimiter">,</span>
+  <span class="field">level</span><span class="punctuation delimiter">:</span> <span class="type builtin">u16</span><span class="punctuation delimiter">,</span>
+
+  <span class="attribute">pub</span> <span class="keyword function">fn</span> <span class="function">loadLast</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span> <span class="exception">!</span><span class="operator">?</span><span class="variable">Save</span> <span class="punctuation bracket">{</span>
+    <span class="comment">//todo</span>
+    <span class="keyword return">return</span> <span class="constant builtin">null</span><span class="punctuation delimiter">;</span>
+  <span class="punctuation bracket">}</span>
+
+  <span class="attribute">pub</span> <span class="keyword function">fn</span> <span class="function">blank</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span> <span class="variable">Save</span> <span class="punctuation bracket">{</span>
+    <span class="keyword return">return</span> <span class="punctuation delimiter">.</span><span class="punctuation bracket">{</span>
+      <span class="punctuation delimiter">.</span><span class="field">lives</span> = <span class="number">3</span><span class="punctuation delimiter">,</span>
+      <span class="punctuation delimiter">.</span><span class="field">level</span> = <span class="number">1</span><span class="punctuation delimiter">,</span>
+    <span class="punctuation bracket">}</span><span class="punctuation delimiter">;</span>
+  <span class="punctuation bracket">}</span>
+<span class="punctuation bracket">}</span><span class="punctuation delimiter">;</span>
+</code></pre>
+<hr><p>Хоча Zig має більшу глибину, а деякі мовні функції мають більші можливості, те, що ми побачили в цих перших двох частинах, є значною частиною мови. Це слугуватиме основою, що дозволить нам досліджувати складніші теми, не надто відволікаючись на синтаксис.</p></div>
+	
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
