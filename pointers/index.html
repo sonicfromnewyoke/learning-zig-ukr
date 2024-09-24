@@ -1,47 +1,45 @@
 <!DOCTYPE html>
 <html>
-
-<head id="head">
-  <meta charset="UTF-8">
-  <meta name="description" content="Вивчаємо Zig Українською">
-  <meta property="og:title" content="Вказівники">
-  <meta property="og:type" content="website">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title id="title">
-    Вказівники
+  <head id="head">
+    <meta charset="UTF-8">
+    <meta name="description" content="Вивчаємо Zig Українською. Zig — імперативна, статично типізована, компільована системна мова програмування загального призначення.">
+    <meta property="og:title" content="Вказівники">
+    <meta property="og:type" content="website">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title id="title">
+      Вказівники
       Вивчаємо Zig Українською
-  </title>
-  <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/style.css">
-  <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/highlight.css">
-  
-</head>
-
-<body>
-  <header>
-    <h1>Вивчаємо Zig Українською</h1>
-  </header>
-  <div id="main-wrapper">
-    <div id="navigation">
-      <nav aria-labelledby="table-of-contents">
-        <h2 id="table-of-contents">Зміст</h2>
-        <ul>
-          <li><a id="toc-Index" href="/learning-zig-ukr/">Вступ</a></li>
-          <li><a id="toc-Language-Overview-1" href="/learning-zig-ukr/language-overview-1/">Огляд Мови, частина 1</a></li>
-          <li><a id="toc-Language-Overview-2" href="/learning-zig-ukr/language-overview-2/">Огляд Мови, частина 2</a></li>
-          <li><a id="toc-Style-Guide" href="/learning-zig-ukr/style-guide/">Керівництво по стилю оформлення</a></li>
-          <li><a id="toc-Pointers" href="/learning-zig-ukr/pointers/">Вказівники</a></li>
-          <li><a id="toc-Stack-Memory" href="/learning-zig-ukr/stack-memory/">Стекова пам'ять</a></li>
-          <li><a id="toc-Heap-Memory" href="/learning-zig-ukr/heap-memory/">Динамічна пам'ять та розподільники пам'яті</a></li>
-          <li><a id="toc-Generics" href="/learning-zig-ukr/generics/">Узагальнені структури даних</a></li>
-          <li><a id="toc-Coding-In-Zig" href="/learning-zig-ukr/coding-in-zig/">Програмуємо мовою Zig</a></li>
-          <li><a id="toc-Conclusion" href="/learning-zig-ukr/conclusion/">Висоновки</a></li>
-        </ul>
-      </nav>
-    </div>
-    <div id="contents-wrapper">
-      <div id="contents">
-        
+    </title>
+    <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/style.css">
+    <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/highlight.css">
+    
+  </head>
+  <body>
+    <header>
+      <h1>Вивчаємо Zig Українською</h1>
+    </header>
+    <div id="main-wrapper">
+      <div id="navigation">
+        <nav aria-labelledby="table-of-contents">
+          <h2 id="table-of-contents">Зміст</h2>
+          <ul>
+            <li><a id="toc-Index" href="/learning-zig-ukr/">Вступ</a></li>
+            <li><a id="toc-Language-Overview-1" href="/learning-zig-ukr/language-overview-1/">Огляд Мови, частина 1</a></li>
+            <li><a id="toc-Language-Overview-2" href="/learning-zig-ukr/language-overview-2/">Огляд Мови, частина 2</a></li>
+            <li><a id="toc-Style-Guide" href="/learning-zig-ukr/style-guide/">Керівництво по стилю оформлення</a></li>
+            <li><a id="toc-Pointers" href="/learning-zig-ukr/pointers/">Вказівники</a></li>
+            <li><a id="toc-Stack-Memory" href="/learning-zig-ukr/stack-memory/">Стекова пам'ять</a></li>
+            <li><a id="toc-Heap-Memory" href="/learning-zig-ukr/heap-memory/">Динамічна пам'ять та розподільники пам'яті</a></li>
+            <li><a id="toc-Generics" href="/learning-zig-ukr/generics/">Узагальнені структури даних</a></li>
+            <li><a id="toc-Coding-In-Zig" href="/learning-zig-ukr/coding-in-zig/">Програмуємо мовою Zig</a></li>
+            <li><a id="toc-Conclusion" href="/learning-zig-ukr/conclusion/">Висоновки</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div id="contents-wrapper">
+        <div id="contents">
+          
 		<h1 var="Вказівники"></h1>
 		<div id="docs"><p>Zig не має збирача сміття. Тягар керування пам’яттю лежить на вас, розробнику. Це велика відповідальність, оскільки вона безпосередньо впливає на продуктивність, стабільність і безпеку вашої програми.</p><p>Ми почнемо з розмови про вказівники, що є важливою темою для обговорення само по собі, але також для того, щоб навчитися бачити дані нашої програми з точки зору, орієнтованої на пам’ять. Якщо ви вже знайомі з вказівниками, розподілом купи та висячими вказівниками, сміливо пропустіть кілька частин до <a href="/learning-zig-ukr/heap-memory/">пам’яті купи та розподільників</a>, яка більше стосується Zig.</p><p><em>learning.zig</em></p><pre><code class="zig"><span class="type qualifier">const</span> <span class="variable">std</span> = <span class="function builtin">@import</span><span class="punctuation bracket">(</span><span class="string">&quot;std&quot;</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
 
@@ -323,9 +321,8 @@ levelUp: user -&gt; -------------  (id: 1043368ec)       |
 </code></pre>
 <p>Вам може ніколи не знадобитися рекурсивна структура, але це не про моделювання даних. Йдеться про розуміння вказівників і моделей пам’яті, а також про краще розуміння того, що збирає компілятор.</p><hr><p>Багато розробників борються зі вказівниками, у них може бути щось невловиме. Вони не здаються конкретними, як ціле число, рядок або <code>User</code>. Нічого з цього не повинно бути кристально зрозумілим, щоб ви рухалися вперед. Але це варто освоїти, і не тільки для Zig. Ці деталі можуть бути приховані в таких мовах, як Ruby, Python і JavaScript, і меншою мірою в C#, Java і Go, але вони все ще присутні, впливаючи на те, як ви пишете код і як цей код виконується. Тож не поспішайте, пограйте з прикладами, додайте оператори друку, щоб переглянути змінні та їх адресу. Чим більше ви досліджуєте, тим ясніше стає.</p></div>
 	
+        </div>
       </div>
     </div>
-  </div>
-</body>
-
+  </body>
 </html>

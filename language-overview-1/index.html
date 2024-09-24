@@ -1,47 +1,45 @@
 <!DOCTYPE html>
 <html>
-
-<head id="head">
-  <meta charset="UTF-8">
-  <meta name="description" content="Вивчаємо Zig Українською">
-  <meta property="og:title" content="Огляд Мови, частина 1">
-  <meta property="og:type" content="website">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title id="title">
-    Огляд Мови, частина 1
+  <head id="head">
+    <meta charset="UTF-8">
+    <meta name="description" content="Вивчаємо Zig Українською. Zig — імперативна, статично типізована, компільована системна мова програмування загального призначення.">
+    <meta property="og:title" content="Огляд Мови, частина 1">
+    <meta property="og:type" content="website">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title id="title">
+      Огляд Мови, частина 1
       Вивчаємо Zig Українською
-  </title>
-  <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/style.css">
-  <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/highlight.css">
-  
-</head>
-
-<body>
-  <header>
-    <h1>Вивчаємо Zig Українською</h1>
-  </header>
-  <div id="main-wrapper">
-    <div id="navigation">
-      <nav aria-labelledby="table-of-contents">
-        <h2 id="table-of-contents">Зміст</h2>
-        <ul>
-          <li><a id="toc-Index" href="/learning-zig-ukr/">Вступ</a></li>
-          <li><a id="toc-Language-Overview-1" href="/learning-zig-ukr/language-overview-1/">Огляд Мови, частина 1</a></li>
-          <li><a id="toc-Language-Overview-2" href="/learning-zig-ukr/language-overview-2/">Огляд Мови, частина 2</a></li>
-          <li><a id="toc-Style-Guide" href="/learning-zig-ukr/style-guide/">Керівництво по стилю оформлення</a></li>
-          <li><a id="toc-Pointers" href="/learning-zig-ukr/pointers/">Вказівники</a></li>
-          <li><a id="toc-Stack-Memory" href="/learning-zig-ukr/stack-memory/">Стекова пам'ять</a></li>
-          <li><a id="toc-Heap-Memory" href="/learning-zig-ukr/heap-memory/">Динамічна пам'ять та розподільники пам'яті</a></li>
-          <li><a id="toc-Generics" href="/learning-zig-ukr/generics/">Узагальнені структури даних</a></li>
-          <li><a id="toc-Coding-In-Zig" href="/learning-zig-ukr/coding-in-zig/">Програмуємо мовою Zig</a></li>
-          <li><a id="toc-Conclusion" href="/learning-zig-ukr/conclusion/">Висоновки</a></li>
-        </ul>
-      </nav>
-    </div>
-    <div id="contents-wrapper">
-      <div id="contents">
-        
+    </title>
+    <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/style.css">
+    <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/highlight.css">
+    
+  </head>
+  <body>
+    <header>
+      <h1>Вивчаємо Zig Українською</h1>
+    </header>
+    <div id="main-wrapper">
+      <div id="navigation">
+        <nav aria-labelledby="table-of-contents">
+          <h2 id="table-of-contents">Зміст</h2>
+          <ul>
+            <li><a id="toc-Index" href="/learning-zig-ukr/">Вступ</a></li>
+            <li><a id="toc-Language-Overview-1" href="/learning-zig-ukr/language-overview-1/">Огляд Мови, частина 1</a></li>
+            <li><a id="toc-Language-Overview-2" href="/learning-zig-ukr/language-overview-2/">Огляд Мови, частина 2</a></li>
+            <li><a id="toc-Style-Guide" href="/learning-zig-ukr/style-guide/">Керівництво по стилю оформлення</a></li>
+            <li><a id="toc-Pointers" href="/learning-zig-ukr/pointers/">Вказівники</a></li>
+            <li><a id="toc-Stack-Memory" href="/learning-zig-ukr/stack-memory/">Стекова пам'ять</a></li>
+            <li><a id="toc-Heap-Memory" href="/learning-zig-ukr/heap-memory/">Динамічна пам'ять та розподільники пам'яті</a></li>
+            <li><a id="toc-Generics" href="/learning-zig-ukr/generics/">Узагальнені структури даних</a></li>
+            <li><a id="toc-Coding-In-Zig" href="/learning-zig-ukr/coding-in-zig/">Програмуємо мовою Zig</a></li>
+            <li><a id="toc-Conclusion" href="/learning-zig-ukr/conclusion/">Висоновки</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div id="contents-wrapper">
+        <div id="contents">
+          
 		<h1 var="Огляд Мови, частина 1"></h1>
 		<div id="docs"><p>Zig — це строго типізована компільована мова. Він підтримує узагальнені типи, має потужні можливості метапрограмування під час компіляції та <strong>не</strong> містить збирач сміття. Багато людей вважають Zig сучасною альтернативою C. Так як, синтаксис мови схожий на C. Ми говоримо про оператори, що завершуються крапкою з комою, і блоки, розділені фігурними дужками</p><p>Ось як виглядає код написаний на Zig:</p><p><em>learning.zig</em></p><pre><code class="zig"><span class="type qualifier">const</span> <span class="variable">std</span> = <span class="function builtin">@import</span><span class="punctuation bracket">(</span><span class="string">&quot;std&quot;</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
 
@@ -237,9 +235,8 @@ User</span><span class="punctuation delimiter">.</span><span class="variable bui
 <p>який виведе:</p><pre><code>struct{comptime year: comptime_int = 2023, comptime month: comptime_int = 8}
 </code></pre><p>Тут ми вказали наші анонімні назви полів структури, <code>year</code> і <code>month</code>. У нашому оригінальному коді ми цього не зробили. У цьому випадку назви полів автоматично генеруються як «0», «1», «2» тощо. Хоча обидва вони є прикладами анонімного структурного літералу, той, що не містить імен полів, часто називають <em>кортежем</em>. Функція <code>print</code> очікує кортеж і використовує порядкову позицію у форматі рядка, щоб отримати відповідний аргумент.</p><p>Zig не має перевантаження функцій і не має варіативних функцій (функцій із довільною кількістю аргументів). Але він має компілятор, здатний створювати спеціалізовані функції на основі переданих типів, у тому числі типів, виведених і створених самим компілятором.</p></div>
 	
+        </div>
       </div>
     </div>
-  </div>
-</body>
-
+  </body>
 </html>

@@ -1,47 +1,45 @@
 <!DOCTYPE html>
 <html>
-
-<head id="head">
-  <meta charset="UTF-8">
-  <meta name="description" content="Вивчаємо Zig Українською">
-  <meta property="og:title" content="Стекова пам&apos;ять">
-  <meta property="og:type" content="website">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title id="title">
-    Стекова пам&apos;ять
+  <head id="head">
+    <meta charset="UTF-8">
+    <meta name="description" content="Вивчаємо Zig Українською. Zig — імперативна, статично типізована, компільована системна мова програмування загального призначення.">
+    <meta property="og:title" content="Стекова пам&apos;ять">
+    <meta property="og:type" content="website">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title id="title">
+      Стекова пам&apos;ять
       Вивчаємо Zig Українською
-  </title>
-  <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/style.css">
-  <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/highlight.css">
-  
-</head>
-
-<body>
-  <header>
-    <h1>Вивчаємо Zig Українською</h1>
-  </header>
-  <div id="main-wrapper">
-    <div id="navigation">
-      <nav aria-labelledby="table-of-contents">
-        <h2 id="table-of-contents">Зміст</h2>
-        <ul>
-          <li><a id="toc-Index" href="/learning-zig-ukr/">Вступ</a></li>
-          <li><a id="toc-Language-Overview-1" href="/learning-zig-ukr/language-overview-1/">Огляд Мови, частина 1</a></li>
-          <li><a id="toc-Language-Overview-2" href="/learning-zig-ukr/language-overview-2/">Огляд Мови, частина 2</a></li>
-          <li><a id="toc-Style-Guide" href="/learning-zig-ukr/style-guide/">Керівництво по стилю оформлення</a></li>
-          <li><a id="toc-Pointers" href="/learning-zig-ukr/pointers/">Вказівники</a></li>
-          <li><a id="toc-Stack-Memory" href="/learning-zig-ukr/stack-memory/">Стекова пам'ять</a></li>
-          <li><a id="toc-Heap-Memory" href="/learning-zig-ukr/heap-memory/">Динамічна пам'ять та розподільники пам'яті</a></li>
-          <li><a id="toc-Generics" href="/learning-zig-ukr/generics/">Узагальнені структури даних</a></li>
-          <li><a id="toc-Coding-In-Zig" href="/learning-zig-ukr/coding-in-zig/">Програмуємо мовою Zig</a></li>
-          <li><a id="toc-Conclusion" href="/learning-zig-ukr/conclusion/">Висоновки</a></li>
-        </ul>
-      </nav>
-    </div>
-    <div id="contents-wrapper">
-      <div id="contents">
-        
+    </title>
+    <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/style.css">
+    <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/highlight.css">
+    
+  </head>
+  <body>
+    <header>
+      <h1>Вивчаємо Zig Українською</h1>
+    </header>
+    <div id="main-wrapper">
+      <div id="navigation">
+        <nav aria-labelledby="table-of-contents">
+          <h2 id="table-of-contents">Зміст</h2>
+          <ul>
+            <li><a id="toc-Index" href="/learning-zig-ukr/">Вступ</a></li>
+            <li><a id="toc-Language-Overview-1" href="/learning-zig-ukr/language-overview-1/">Огляд Мови, частина 1</a></li>
+            <li><a id="toc-Language-Overview-2" href="/learning-zig-ukr/language-overview-2/">Огляд Мови, частина 2</a></li>
+            <li><a id="toc-Style-Guide" href="/learning-zig-ukr/style-guide/">Керівництво по стилю оформлення</a></li>
+            <li><a id="toc-Pointers" href="/learning-zig-ukr/pointers/">Вказівники</a></li>
+            <li><a id="toc-Stack-Memory" href="/learning-zig-ukr/stack-memory/">Стекова пам'ять</a></li>
+            <li><a id="toc-Heap-Memory" href="/learning-zig-ukr/heap-memory/">Динамічна пам'ять та розподільники пам'яті</a></li>
+            <li><a id="toc-Generics" href="/learning-zig-ukr/generics/">Узагальнені структури даних</a></li>
+            <li><a id="toc-Coding-In-Zig" href="/learning-zig-ukr/coding-in-zig/">Програмуємо мовою Zig</a></li>
+            <li><a id="toc-Conclusion" href="/learning-zig-ukr/conclusion/">Висоновки</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div id="contents-wrapper">
+        <div id="contents">
+          
 		<h1 var="Стекова пам&apos;ять"></h1>
 		<div id="docs"><p>Занурення у вказівники дало розуміння зв’язку між змінними, даними та пам’яттю. Отже, ми маємо уявлення про те, як виглядає пам’ять, але нам ще належить поговорити про те, як керувати даними та, відповідно, пам’яттю. Для короткочасних і простих сценаріїв це, ймовірно, не має значення. У 32-гігабайтного ноутбука ви можете запустити свою програму, використати кілька сотень мегабайт оперативної пам’яті для читання файлу та аналізу відповіді HTTP, зробити щось дивовижне та вийти. Після виходу з програми ОС знає, що будь-яка пам’ять, яку вона надала вашій програмі, тепер може бути використана для чогось іншого.</p><p>Але для програм, які працюють днями, місяцями чи навіть роками, пам’ять стає обмеженим і дорогоцінним ресурсом, який, ймовірно, потребують інші процеси, що виконуються на тій же машині. Просто немає можливості чекати, поки програма завершиться, щоб звільнити пам'ять. Це основна робота збирача сміття: знати, які дані більше не використовуються, і звільнити їх пам’ять. У Zig ви збирач сміття.</p><p>Більшість програм, які ви пишете, використовуватимуть три "області" пам'яті. Перший — це глобальний простір, де зберігаються константи програми, включаючи рядкові літерали. Усі глобальні дані запікаються у двійковий файл, повністю відомий під час компіляції (і, отже, під час виконання) і незмінний. Ці дані існують протягом усього життя програми, ніколи не потребуючи більше чи менше пам’яті. Окрім впливу, який це має на розмір нашого двійкового файлу, це не те, про що нам взагалі потрібно турбуватися.</p><p>Друга область пам’яті — це стек викликів, тема для цієї частини. Третя зона - купа, тема нашої наступної частини.</p><hr><blockquote><p>Реальної фізичної різниці між областями пам’яті немає, це концепція, створена ОС і виконуваним файлом.</p></blockquote><hr><h2>Стекові Кадри</h2><p>Усі дані, які ми бачили досі, були константами, що зберігалися в розділі глобальних даних наших двійкових або локальних змінних. «Локальна» вказує на те, що змінна дійсна лише в межах області, де її оголошено. У Zig області видимості починаються і закінчуються фігурними дужками, <code>{ ... }</code>. Більшість змінних обмежені функцією, включно з параметрами функції, або блоком потоку керування, як-от <code>if</code>. Але, як ми бачили, ви можете створювати довільні блоки і, таким чином, довільні області.</p><p>У попередній частині ми візуалізували пам’ять наших функцій <code>main</code> і <code>levelUp</code>, кожна з яких має <code>User</code>:</p><pre><code>main: user -&gt;    -------------  (id: 1043368d0)
                  |     1     |
@@ -130,9 +128,8 @@ User 9114745905793990681 has power of 0
 </code></pre>
 <p>Усе, що повертає <code>Parser.parse</code>, переживає <code>input</code>. Якщо <code>Parser</code> містить посилання на <code>input</code>, це буде висячий вказівник, який просто чекає, щоб зірвати нашу програму. В ідеалі, якщо <code>Parser</code> потребує <code>input</code>, щоб існувати стільки ж, скільки він живе, він створить його копію, і ця копія буде прив’язана до його власного життя (докладніше про це в наступній частині). Але тут немає нічого, щоб забезпечити виконання цього контракту. Документація <code>Parser</code> може пролити світло на те, що він очікує від <code>input</code> або що він з ним робить. За відсутності цього нам, можливо, доведеться копатися в коді, щоб зрозуміти це.</p><hr><p>Простий спосіб вирішити нашу початкову помилку — змінити <code>init</code> так, щоб він повертав <code>User</code>, а не <code>*User</code> (вказівник на <code>User</code>). Тоді ми повернемо як <code>return user;</code>, а не <code>return &user;</code>. Але це не завжди буде можливо. Дані часто виходять за жорсткі межі функціональних областей. Для цього у нас є третя область пам'яті, купа, тема наступної частини.</p><p>Перш ніж занурюватися в купу, знайте, що ми побачимо останній приклад висячих вказівників до кінця цього посібника. На цьому етапі ми охопили достатньо мови, щоб надати трохи менш заплутаний приклад. Я хочу повернутися до цієї теми, тому що для розробників, які працюють із мовами зі збиранням сміття, це може викликати помилки та розчарування. Це те, з чим ви <strong>будете</strong> боротися. Все зводиться до того, щоб знати, де і коли існують дані.</p></div>
 	
+        </div>
       </div>
     </div>
-  </div>
-</body>
-
+  </body>
 </html>

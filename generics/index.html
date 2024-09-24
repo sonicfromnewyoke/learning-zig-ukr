@@ -1,47 +1,45 @@
 <!DOCTYPE html>
 <html>
-
-<head id="head">
-  <meta charset="UTF-8">
-  <meta name="description" content="Вивчаємо Zig Українською">
-  <meta property="og:title" content="Узагальнені структури даних">
-  <meta property="og:type" content="website">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title id="title">
-    Узагальнені структури даних
+  <head id="head">
+    <meta charset="UTF-8">
+    <meta name="description" content="Вивчаємо Zig Українською. Zig — імперативна, статично типізована, компільована системна мова програмування загального призначення.">
+    <meta property="og:title" content="Узагальнені структури даних">
+    <meta property="og:type" content="website">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title id="title">
+      Узагальнені структури даних
       Вивчаємо Zig Українською
-  </title>
-  <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/style.css">
-  <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/highlight.css">
-  
-</head>
-
-<body>
-  <header>
-    <h1>Вивчаємо Zig Українською</h1>
-  </header>
-  <div id="main-wrapper">
-    <div id="navigation">
-      <nav aria-labelledby="table-of-contents">
-        <h2 id="table-of-contents">Зміст</h2>
-        <ul>
-          <li><a id="toc-Index" href="/learning-zig-ukr/">Вступ</a></li>
-          <li><a id="toc-Language-Overview-1" href="/learning-zig-ukr/language-overview-1/">Огляд Мови, частина 1</a></li>
-          <li><a id="toc-Language-Overview-2" href="/learning-zig-ukr/language-overview-2/">Огляд Мови, частина 2</a></li>
-          <li><a id="toc-Style-Guide" href="/learning-zig-ukr/style-guide/">Керівництво по стилю оформлення</a></li>
-          <li><a id="toc-Pointers" href="/learning-zig-ukr/pointers/">Вказівники</a></li>
-          <li><a id="toc-Stack-Memory" href="/learning-zig-ukr/stack-memory/">Стекова пам'ять</a></li>
-          <li><a id="toc-Heap-Memory" href="/learning-zig-ukr/heap-memory/">Динамічна пам'ять та розподільники пам'яті</a></li>
-          <li><a id="toc-Generics" href="/learning-zig-ukr/generics/">Узагальнені структури даних</a></li>
-          <li><a id="toc-Coding-In-Zig" href="/learning-zig-ukr/coding-in-zig/">Програмуємо мовою Zig</a></li>
-          <li><a id="toc-Conclusion" href="/learning-zig-ukr/conclusion/">Висоновки</a></li>
-        </ul>
-      </nav>
-    </div>
-    <div id="contents-wrapper">
-      <div id="contents">
-        
+    </title>
+    <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/style.css">
+    <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/highlight.css">
+    
+  </head>
+  <body>
+    <header>
+      <h1>Вивчаємо Zig Українською</h1>
+    </header>
+    <div id="main-wrapper">
+      <div id="navigation">
+        <nav aria-labelledby="table-of-contents">
+          <h2 id="table-of-contents">Зміст</h2>
+          <ul>
+            <li><a id="toc-Index" href="/learning-zig-ukr/">Вступ</a></li>
+            <li><a id="toc-Language-Overview-1" href="/learning-zig-ukr/language-overview-1/">Огляд Мови, частина 1</a></li>
+            <li><a id="toc-Language-Overview-2" href="/learning-zig-ukr/language-overview-2/">Огляд Мови, частина 2</a></li>
+            <li><a id="toc-Style-Guide" href="/learning-zig-ukr/style-guide/">Керівництво по стилю оформлення</a></li>
+            <li><a id="toc-Pointers" href="/learning-zig-ukr/pointers/">Вказівники</a></li>
+            <li><a id="toc-Stack-Memory" href="/learning-zig-ukr/stack-memory/">Стекова пам'ять</a></li>
+            <li><a id="toc-Heap-Memory" href="/learning-zig-ukr/heap-memory/">Динамічна пам'ять та розподільники пам'яті</a></li>
+            <li><a id="toc-Generics" href="/learning-zig-ukr/generics/">Узагальнені структури даних</a></li>
+            <li><a id="toc-Coding-In-Zig" href="/learning-zig-ukr/coding-in-zig/">Програмуємо мовою Zig</a></li>
+            <li><a id="toc-Conclusion" href="/learning-zig-ukr/conclusion/">Висоновки</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div id="contents-wrapper">
+        <div id="contents">
+          
 		<h1 var="Узагальнені структури даних"></h1>
 		<div id="docs"><p>У попередній частині ми створили простий динамічний масив під назвою <code>IntList</code>. Метою структури даних було зберігати динамічну кількість значень. Хоча використаний нами алгоритм працював би для будь-якого типу даних, наша реалізація була прив’язана до значень <code>i64</code>. Ласкаво просимо в узагальнені структури даних (generics), метою яких є абстрагування алгоритмів і структур даних від конкретних типів.</p><p>Багато мов реалізують узагальнені структури даних за допомогою спеціального синтаксису і специфічних правил. У Zig навпаки, узагальнені структури даних не стільки специфічна особливість, як вираження того, на що здатний компілятор. Зокрема, узагальнені структури даних використовують метапрограмування під час компіляції <code>comptime</code>.</p><p>Ми почнемо з розгляду дурного прикладу, щоб зорієнтуватися:</p><p><em>learning.zig</em></p><pre><code class="zig"><span class="type qualifier">const</span> <span class="variable">std</span> = <span class="function builtin">@import</span><span class="punctuation bracket">(</span><span class="string">&quot;std&quot;</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
 
@@ -196,9 +194,8 @@
 </code></pre>
 <p><code>Self</code> — це не спеціальне ім’я, це просто змінна, і вона використовує <code>PascalCase</code>, тому що її значення це <code>type</code>. Ми можемо використовувати <code>Self</code> там, де раніше використовували <code>List(T)</code>.</p><hr><p>Ми могли б створити складніші приклади з декількома параметрами типу та досконалішими алгоритмами. Але, зрештою, основний загальний код нічим не відрізнятиметься від простих прикладів вище. У наступній частині ми знову торкнемося узагальнених структур, коли поглянемо на <code>ArrayList(T)</code> і <code>StringHashMap(V)</code> стандартної бібліотеки.</p></div>
 	
+        </div>
       </div>
     </div>
-  </div>
-</body>
-
+  </body>
 </html>

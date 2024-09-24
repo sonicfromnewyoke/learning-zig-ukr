@@ -1,47 +1,45 @@
 <!DOCTYPE html>
 <html>
-
-<head id="head">
-  <meta charset="UTF-8">
-  <meta name="description" content="Вивчаємо Zig Українською">
-  <meta property="og:title" content="Огляд Мови, частина 2">
-  <meta property="og:type" content="website">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title id="title">
-    Огляд Мови, частина 2
+  <head id="head">
+    <meta charset="UTF-8">
+    <meta name="description" content="Вивчаємо Zig Українською. Zig — імперативна, статично типізована, компільована системна мова програмування загального призначення.">
+    <meta property="og:title" content="Огляд Мови, частина 2">
+    <meta property="og:type" content="website">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title id="title">
+      Огляд Мови, частина 2
       Вивчаємо Zig Українською
-  </title>
-  <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/style.css">
-  <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/highlight.css">
-  
-</head>
-
-<body>
-  <header>
-    <h1>Вивчаємо Zig Українською</h1>
-  </header>
-  <div id="main-wrapper">
-    <div id="navigation">
-      <nav aria-labelledby="table-of-contents">
-        <h2 id="table-of-contents">Зміст</h2>
-        <ul>
-          <li><a id="toc-Index" href="/learning-zig-ukr/">Вступ</a></li>
-          <li><a id="toc-Language-Overview-1" href="/learning-zig-ukr/language-overview-1/">Огляд Мови, частина 1</a></li>
-          <li><a id="toc-Language-Overview-2" href="/learning-zig-ukr/language-overview-2/">Огляд Мови, частина 2</a></li>
-          <li><a id="toc-Style-Guide" href="/learning-zig-ukr/style-guide/">Керівництво по стилю оформлення</a></li>
-          <li><a id="toc-Pointers" href="/learning-zig-ukr/pointers/">Вказівники</a></li>
-          <li><a id="toc-Stack-Memory" href="/learning-zig-ukr/stack-memory/">Стекова пам'ять</a></li>
-          <li><a id="toc-Heap-Memory" href="/learning-zig-ukr/heap-memory/">Динамічна пам'ять та розподільники пам'яті</a></li>
-          <li><a id="toc-Generics" href="/learning-zig-ukr/generics/">Узагальнені структури даних</a></li>
-          <li><a id="toc-Coding-In-Zig" href="/learning-zig-ukr/coding-in-zig/">Програмуємо мовою Zig</a></li>
-          <li><a id="toc-Conclusion" href="/learning-zig-ukr/conclusion/">Висоновки</a></li>
-        </ul>
-      </nav>
-    </div>
-    <div id="contents-wrapper">
-      <div id="contents">
-        
+    </title>
+    <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/style.css">
+    <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/highlight.css">
+    
+  </head>
+  <body>
+    <header>
+      <h1>Вивчаємо Zig Українською</h1>
+    </header>
+    <div id="main-wrapper">
+      <div id="navigation">
+        <nav aria-labelledby="table-of-contents">
+          <h2 id="table-of-contents">Зміст</h2>
+          <ul>
+            <li><a id="toc-Index" href="/learning-zig-ukr/">Вступ</a></li>
+            <li><a id="toc-Language-Overview-1" href="/learning-zig-ukr/language-overview-1/">Огляд Мови, частина 1</a></li>
+            <li><a id="toc-Language-Overview-2" href="/learning-zig-ukr/language-overview-2/">Огляд Мови, частина 2</a></li>
+            <li><a id="toc-Style-Guide" href="/learning-zig-ukr/style-guide/">Керівництво по стилю оформлення</a></li>
+            <li><a id="toc-Pointers" href="/learning-zig-ukr/pointers/">Вказівники</a></li>
+            <li><a id="toc-Stack-Memory" href="/learning-zig-ukr/stack-memory/">Стекова пам'ять</a></li>
+            <li><a id="toc-Heap-Memory" href="/learning-zig-ukr/heap-memory/">Динамічна пам'ять та розподільники пам'яті</a></li>
+            <li><a id="toc-Generics" href="/learning-zig-ukr/generics/">Узагальнені структури даних</a></li>
+            <li><a id="toc-Coding-In-Zig" href="/learning-zig-ukr/coding-in-zig/">Програмуємо мовою Zig</a></li>
+            <li><a id="toc-Conclusion" href="/learning-zig-ukr/conclusion/">Висоновки</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div id="contents-wrapper">
+        <div id="contents">
+          
 		<h1 var="Огляд Мови, частина 2"></h1>
 		<div id="docs"><p>Ця частина продовжується там, де зупинилася попередня: огляд мови. Ми розглянемо потік керування виконанням програми Zig і типи даних, про які ми ще не згадували. В першій частині ми охопили більше синтаксис мови, що дозволить нам зрозуміти краще мову та стандартну бібліотеку.</p><h2>Керування Потоком Виконання</h2><p>Оператори керування потоком у Zig, ймовірно, покажуться вам знайомими, але з додатковими синергізмами з деякими аспектами мови, які нам ще потрібно вивчити. Ми почнемо з короткого огляду та будемо повертатися по мірі того, як нам будуть зустрічатись особливості поведінки інструкціій керування.</p><p>Ви помітите, що замість логічних операторів <code>&&</code> і <code>||</code> ми використовуємо <code>and</code> та <code>or</code>. Як і в більшості мов, «і» та «або» керують процесом виконання: вони замикаються. Права сторона "і" не оцінюється, якщо ліва сторона має значення "false", а права частина "або" не оцінюється, якщо ліва сторона має значення "true". У Zig керування потоком виконується за допомогою ключових слів, тому використовуються «and» та «or».</p><p>Крім того, оператор порівняння <code>==</code> не працює для зрізіс, таких як <code>[]const u8</code>, тобто рядками. У більшості випадків ви будете використовувати <code>std.mem.eql(u8, str1, str2)</code>, який порівнює довжину, а потім байти двох зрізів.</p><p>У Zig <code>if</code>, <code>else if</code> та <code>else</code> нічим особливо не відрізняються:</p><pre><code class="zig"><span class="comment">// std.mem.eql виконує побайтове порівняння</span>
 <span class="comment">// для рядка він буде чутливим до регістру</span>
@@ -344,9 +342,8 @@
 </code></pre>
 <hr><p>Хоча Zig має більшу глибину, а деякі мовні функції мають більші можливості, те, що ми побачили в цих перших двох частинах, є значною частиною мови. Це слугуватиме основою, що дозволить нам досліджувати складніші теми, не надто відволікаючись на синтаксис.</p></div>
 	
+        </div>
       </div>
     </div>
-  </div>
-</body>
-
+  </body>
 </html>

@@ -1,47 +1,45 @@
 <!DOCTYPE html>
 <html>
-
-<head id="head">
-  <meta charset="UTF-8">
-  <meta name="description" content="Вивчаємо Zig Українською">
-  <meta property="og:title" content="Динамічна пам&apos;ять та розподільники пам&apos;яті">
-  <meta property="og:type" content="website">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title id="title">
-    Динамічна пам&apos;ять та розподільники пам&apos;яті
+  <head id="head">
+    <meta charset="UTF-8">
+    <meta name="description" content="Вивчаємо Zig Українською. Zig — імперативна, статично типізована, компільована системна мова програмування загального призначення.">
+    <meta property="og:title" content="Динамічна пам&apos;ять та розподільники пам&apos;яті">
+    <meta property="og:type" content="website">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title id="title">
+      Динамічна пам&apos;ять та розподільники пам&apos;яті
       Вивчаємо Zig Українською
-  </title>
-  <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/style.css">
-  <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/highlight.css">
-  
-</head>
-
-<body>
-  <header>
-    <h1>Вивчаємо Zig Українською</h1>
-  </header>
-  <div id="main-wrapper">
-    <div id="navigation">
-      <nav aria-labelledby="table-of-contents">
-        <h2 id="table-of-contents">Зміст</h2>
-        <ul>
-          <li><a id="toc-Index" href="/learning-zig-ukr/">Вступ</a></li>
-          <li><a id="toc-Language-Overview-1" href="/learning-zig-ukr/language-overview-1/">Огляд Мови, частина 1</a></li>
-          <li><a id="toc-Language-Overview-2" href="/learning-zig-ukr/language-overview-2/">Огляд Мови, частина 2</a></li>
-          <li><a id="toc-Style-Guide" href="/learning-zig-ukr/style-guide/">Керівництво по стилю оформлення</a></li>
-          <li><a id="toc-Pointers" href="/learning-zig-ukr/pointers/">Вказівники</a></li>
-          <li><a id="toc-Stack-Memory" href="/learning-zig-ukr/stack-memory/">Стекова пам'ять</a></li>
-          <li><a id="toc-Heap-Memory" href="/learning-zig-ukr/heap-memory/">Динамічна пам'ять та розподільники пам'яті</a></li>
-          <li><a id="toc-Generics" href="/learning-zig-ukr/generics/">Узагальнені структури даних</a></li>
-          <li><a id="toc-Coding-In-Zig" href="/learning-zig-ukr/coding-in-zig/">Програмуємо мовою Zig</a></li>
-          <li><a id="toc-Conclusion" href="/learning-zig-ukr/conclusion/">Висоновки</a></li>
-        </ul>
-      </nav>
-    </div>
-    <div id="contents-wrapper">
-      <div id="contents">
-        
+    </title>
+    <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/style.css">
+    <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/highlight.css">
+    
+  </head>
+  <body>
+    <header>
+      <h1>Вивчаємо Zig Українською</h1>
+    </header>
+    <div id="main-wrapper">
+      <div id="navigation">
+        <nav aria-labelledby="table-of-contents">
+          <h2 id="table-of-contents">Зміст</h2>
+          <ul>
+            <li><a id="toc-Index" href="/learning-zig-ukr/">Вступ</a></li>
+            <li><a id="toc-Language-Overview-1" href="/learning-zig-ukr/language-overview-1/">Огляд Мови, частина 1</a></li>
+            <li><a id="toc-Language-Overview-2" href="/learning-zig-ukr/language-overview-2/">Огляд Мови, частина 2</a></li>
+            <li><a id="toc-Style-Guide" href="/learning-zig-ukr/style-guide/">Керівництво по стилю оформлення</a></li>
+            <li><a id="toc-Pointers" href="/learning-zig-ukr/pointers/">Вказівники</a></li>
+            <li><a id="toc-Stack-Memory" href="/learning-zig-ukr/stack-memory/">Стекова пам'ять</a></li>
+            <li><a id="toc-Heap-Memory" href="/learning-zig-ukr/heap-memory/">Динамічна пам'ять та розподільники пам'яті</a></li>
+            <li><a id="toc-Generics" href="/learning-zig-ukr/generics/">Узагальнені структури даних</a></li>
+            <li><a id="toc-Coding-In-Zig" href="/learning-zig-ukr/coding-in-zig/">Програмуємо мовою Zig</a></li>
+            <li><a id="toc-Conclusion" href="/learning-zig-ukr/conclusion/">Висоновки</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div id="contents-wrapper">
+        <div id="contents">
+          
 		<h1 var="Динамічна пам&apos;ять та розподільники пам&apos;яті"></h1>
 		<div id="docs"><p>Усе, що ми бачили досі, мало попередньо відомий розмір. Масиви завжди мають відому довжину під час компіляції (фактично, довжина є частиною типу). Усі наші рядки були рядковими літералами, які мають відому довжину під час компіляції.</p><p>Крім того, два типи стратегій керування пам’яттю, які ми бачили, глобальні дані та стек викликів, хоч і є простими та ефективними, але є обмеженими. Жодна з них не може мати справу з даними динамічного розміру, і обидва є жорсткими щодо тривалості життя даних.</p><p>Ця частина розділена на дві теми. Перша - це загальний огляд нашої третьої області пам'яті, купи. Інша — простий, але унікальний підхід Zig до керування пам’яттю купи. Навіть якщо ви знайомі з куповою пам’яттю, скажімо, з використанням <code>malloc</code> C, ви захочете прочитати першу частину, оскільки вона досить специфічна для Zig.</p><h2>Динамічна памʼять (heap, "куча")</h2><p>Купа - це третя і остання область пам'яті в нашому розпорядженні. Порівняно як з глобальними даними, так і зі стеком викликів, купа виглядає як дикий захід: все підійде. Зокрема, у купі ми можемо створити пам’ять під час виконання з відомим розміром часу виконання та мати повний контроль над часом її життя.</p><p>Стек викликів дивовижний завдяки простому та передбачуваному способу керування даними (шляхом вставляння та висування кадрів стеку). Ця перевага також є недоліком: час життя даних прив’язаний до їх місця в стеку викликів. Купа - точнісінько навпаки. Він не має вбудованого життєвого циклу, тому наші дані можуть зберігатися стільки часу, скільки потрібно. І ця перевага є його недоліком: він не має вбудованого життєвого циклу, тому, якщо ми не звільнимо дані, ніхто цього не зробить.</p><p>Давайте розглянемо приклад:</p><p><em>learning.zig</em></p><pre><code class="zig"><span class="type qualifier">const</span> <span class="variable">std</span> = <span class="function builtin">@import</span><span class="punctuation bracket">(</span><span class="string">&quot;std&quot;</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
 
@@ -418,9 +416,8 @@ self</span><span class="punctuation delimiter">.</span><span class="variable bui
 </code></pre>
 <hr><blockquote><p>У той час як розподільники часто вказуються як перший параметр функції, автори зазвичай є останніми. <code>ಠ_ಠ</code></p></blockquote><hr><p>У багатьох випадках загортання нашого записувача в <code>std.io.BufferedWriter</code> дасть хороше підвищення продуктивності.</p><p>Мета полягає не в тому, щоб усунути всі динамічні розподіли. Це не спрацює, оскільки ці альтернативи мають сенс лише в окремих випадках. Але тепер у вашому розпорядженні багато варіантів. Від кадрів стека до розподілювача загального призначення та всього іншого, наприклад статичних буферів, потокових записувачів і спеціалізованих розподільників.</p></div>
 	
+        </div>
       </div>
     </div>
-  </div>
-</body>
-
+  </body>
 </html>
