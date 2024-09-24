@@ -5,7 +5,9 @@
     .author = "Sonic",
     .draft = false,
     .layout = "learning_zig.shtml",
-    .tags = [],
+    .custom = {
+      "mobile_menu_title": "Огляд мови ч.2",
+    }
 }  
 ---
 

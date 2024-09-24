@@ -1,11 +1,13 @@
 ---
 {
-    .title = "Керівництво по стилю оформлення",
+    .title = "Керівництво по Стилю Оформлення",
     .date = "2024-08-17T00:00:00",
     .author = "Sonic",
     .draft = false,
     .layout = "learning_zig.shtml",
-    .tags = [],
+    .custom = {
+      "mobile_menu_title": "Стиль Оформлення",
+    }
 }  
 ---
 
