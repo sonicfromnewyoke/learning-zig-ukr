@@ -4,12 +4,12 @@
 <head id="head">
   <meta charset="UTF-8">
   <meta name="description" content="Вивчаємо Zig Українською">
-  <meta property="og:title" content="Керівництво по стилю оформлення">
+  <meta property="og:title" content="Керівництво по Стилю Оформлення">
   <meta property="og:type" content="website">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title id="title">
-    Керівництво по стилю оформлення
+    Керівництво по Стилю Оформлення
       Вивчаємо Zig Українською
   </title>
   <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/style.css">
@@ -42,7 +42,7 @@
     <div id="contents-wrapper">
       <div id="contents">
         
-		<h1 var="Керівництво по стилю оформлення"></h1>
+		<h1 var="Керівництво по Стилю Оформлення"></h1>
 		<div id="docs"><p>У цій короткій частині ми розглянемо два правила написання коду, які використовуються компілятором, а також правила іменування стандартної бібліотеки.</p><h2>Невикористані змінні</h2><p>Zig не дозволяє змінним залишатися невикористаними. Наступне дає дві помилки під час компіляції:</p><p><em>learning.zig</em></p><pre><code class="zig"><span class="type qualifier">const</span> <span class="variable">std</span> = <span class="function builtin">@import</span><span class="punctuation bracket">(</span><span class="string">&quot;std&quot;</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
 
 <span class="attribute">pub</span> <span class="keyword function">fn</span> <span class="function">main</span><span class="punctuation bracket">(</span><span class="punctuation bracket">)</span> <span class="type builtin">void</span> <span class="punctuation bracket">{</span>
