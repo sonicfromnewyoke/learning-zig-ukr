@@ -11,6 +11,7 @@
       Керівництво по Стилю Оформлення
       Вивчаємо Zig Українською
     </title>
+    <link rel="icon" href="/learning-zig-ukr/favicon.png">
     <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/style.css">
     <link rel="stylesheet" type="text/css" href="/learning-zig-ukr/highlight.css">
     
@@ -72,7 +73,7 @@
 </code></pre>
 <p>Зауважте, що <code>std</code> також не використовується, але не створює помилки. Очікуйте, що колись у майбутньому Zig розглядатиме це як помилку під час компіляції.</p><h2>Затінення (Shadowing)</h2><p>Zig не дозволяє одному ідентифікатору "приховувати" інший за допомогою того самого імені. Цей код для читання з сокета недійсний:</p><pre><code class="zig"><span class="keyword function">fn</span> <span class="function">read</span><span class="punctuation bracket">(</span><span class="parameter">stream</span><span class="punctuation delimiter">:</span> <span class="variable">std</span><span class="punctuation delimiter">.</span><span class="field">net</span><span class="punctuation delimiter">.</span><span class="field">Stream</span><span class="punctuation bracket">)</span> <span class="exception">!</span><span class="punctuation bracket">[</span><span class="punctuation bracket">]</span><span class="type qualifier">const</span> <span class="type builtin">u8</span> <span class="punctuation bracket">{</span>
   <span class="type qualifier">var</span> <span class="variable">buf</span><span class="punctuation delimiter">:</span> <span class="punctuation bracket">[</span><span class="number">512</span><span class="punctuation bracket">]</span><span class="type builtin">u8</span> = <span class="constant builtin">undefined</span><span class="punctuation delimiter">;</span>
-  <span class="type qualifier">const</span> <span class="variable">read</span> = <span class="operator">try</span> <span class="variable">stream</span><span class="punctuation delimiter">.</span><span class="function">read</span><span class="punctuation bracket">(</span><span class="operator">&</span><span class="variable">buf</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
+  <span class="type qualifier">const</span> <span class="variable">read</span> = <span class="operator">try</span> <span class="variable">stream</span><span class="punctuation delimiter">.</span><span class="function">read</span><span class="punctuation bracket">(</span><span class="operator">&amp;</span><span class="variable">buf</span><span class="punctuation bracket">)</span><span class="punctuation delimiter">;</span>
 
   <span class="conditional">if</span> <span class="punctuation bracket">(</span><span class="variable">read</span> <span class="operator">==</span> <span class="number">0</span><span class="punctuation bracket">)</span> <span class="punctuation bracket">{</span>
     <span class="keyword return">return</span> <span class="keyword">error</span><span class="punctuation delimiter">.</span><span class="variable builtin">Closed</span><span class="punctuation delimiter">;</span>
