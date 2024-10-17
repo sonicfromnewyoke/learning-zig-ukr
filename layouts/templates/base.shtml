@@ -11,6 +11,7 @@
       <super>
       Вивчаємо Zig Українською
     </title>
+    <link rel="icon" href="$site.asset('favicon.png').link()">
     <link rel="stylesheet" type="text/css" href="$site.asset('style.css').link()">
     <link rel="stylesheet" type="text/css" href="$site.asset('highlight.css').link()">
     <super>
