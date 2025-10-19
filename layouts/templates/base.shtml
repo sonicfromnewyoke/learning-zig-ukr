@@ -34,7 +34,7 @@
             <li><a id="toc-Heap-Memory" href="$site.page('heap-memory').link()">Динамічна пам'ять та розподільники пам'яті</a></li>
             <li><a id="toc-Generics" href="$site.page('generics').link()">Узагальнені структури даних</a></li>
             <li><a id="toc-Coding-In-Zig" href="$site.page('coding-in-zig').link()">Програмуємо мовою Zig</a></li>
-            <li><a id="toc-Conclusion" href="$site.page('conclusion').link()">Висоновки</a></li>
+            <li><a id="toc-Conclusion" href="$site.page('conclusion').link()">Висновки</a></li>
           </ul>
         </nav>
       </div>
